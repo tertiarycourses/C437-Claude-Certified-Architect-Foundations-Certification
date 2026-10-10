@@ -6,14 +6,15 @@ Build reliable Claude-based systems with bounded agent loops, precise tool contr
 |---|---|
 | Course code | `C437` |
 | Duration | 2 days / 15 hours (9:30am – 5:30pm daily) |
-| Courseware release | v1.0 |
+| Programme | Non-WSQ |
+| Courseware release | v2.0 (10 Oct 2026) |
 | Registration | [View course details and register](https://www.tertiarycourses.com.sg/claude-certified-architect-foundations-certification.html) |
 
 ## Courseware preview
 
 ![Claude Certified Architect - Foundations Certification courseware cover](screenshot.png)
 
-The v1.0 courseware uses a projector-ready dark theme. It semantically maps the instructional frames to the certification blueprint and adds one editable field-pattern synthesis slide for every official exam task.
+The v2.0 courseware uses the Claude house theme (Cambria headings, Calibri body, cream and ink with terracotta accents). It semantically maps the instructional frames to the certification blueprint and adds one editable field-pattern synthesis slide for every official exam task.
 
 ## About the course
 
@@ -58,7 +59,14 @@ python3 -B verify.py
 
 ## Public package
 
-This repository contains the six learner-safe lab folders and their guides. The released trainer slides, learner slide PDF, Learner Guide, and Lesson Plan are available from the course's Google Drive courseware folder.
+This repository contains the current courseware and the six learner-safe lab folders:
+
+- [Trainer Slides v2.0 (PPTX)](courseware/C437-Claude-Certified-Architect-Foundations-Certification-Trainer-Slides-v2.0.pptx) and [PDF](courseware/C437-Claude-Certified-Architect-Foundations-Certification-Trainer-Slides-v2.0.pdf)
+- [Learner Guide (DOCX)](courseware/LG-Claude-Certified-Architect-Foundations-Certification-v1.0.docx) and [PDF](courseware/LG-Claude-Certified-Architect-Foundations-Certification-v1.0.pdf)
+- [Lesson Plan (DOCX)](courseware/LP-Claude-Certified-Architect-Foundations-Certification-v1.0.docx) and [PDF](courseware/LP-Claude-Certified-Architect-Foundations-Certification-v1.0.pdf)
+- [Labs](labs/README.md)
+
+Superseded versions are kept out of the repository.
 
 ## Reference acknowledgement
 
