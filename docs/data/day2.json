@@ -1,0 +1,180 @@
+[
+ {
+  "id": 31,
+  "slug": "lab-31-build-the-customer-resolution-agent",
+  "title": "Vibe-code the customer resolution agent with the Python SDK",
+  "tasks": [
+   "1.1",
+   "2.1"
+  ],
+  "short": "The agent loop, Python SDK",
+  "core": true,
+  "group": "A",
+  "prompts": "lab-31.html"
+ },
+ {
+  "id": 32,
+  "slug": "lab-32-move-the-tools-to-an-mcp-server",
+  "title": "Vibe-code an MCP server for the agent's tools",
+  "tasks": [
+   "2.4",
+   "2.2"
+  ],
+  "short": "MCP server for the tools",
+  "core": true,
+  "group": "A",
+  "prompts": "lab-32.html"
+ },
+ {
+  "id": 33,
+  "slug": "lab-33-pretooluse-hook-blocks-the-780-refund",
+  "title": "Vibe-code a PreToolUse hook that blocks the $780 refund",
+  "tasks": [
+   "1.5",
+   "1.4"
+  ],
+  "short": "PreToolUse hook",
+  "core": true,
+  "group": "A",
+  "prompts": "lab-33.html"
+ },
+ {
+  "id": 34,
+  "slug": "lab-34-posttooluse-hook-cleans-the-data",
+  "title": "Vibe-code a PostToolUse hook that cleans the data, then prove the agent works",
+  "tasks": [
+   "1.5"
+  ],
+  "short": "PostToolUse hook + tests",
+  "core": true,
+  "group": "A",
+  "prompts": "lab-34.html"
+ },
+ {
+  "id": 35,
+  "slug": "lab-35-build-a-multi-agent-research-team",
+  "title": "Vibe-code a multi-agent research team",
+  "tasks": [
+   "1.2",
+   "1.3",
+   "5.3"
+  ],
+  "short": "Multi-agent research team",
+  "core": true,
+  "group": "B",
+  "prompts": "lab-35.html"
+ },
+ {
+  "id": 36,
+  "slug": "lab-36-first-api-call-to-agent-loop",
+  "title": "From one API call to a working agent loop",
+  "tasks": [
+   "1.1"
+  ],
+  "core": false,
+  "short": "API call to a working agent loop"
+ },
+ {
+  "id": 37,
+  "slug": "lab-37-build-agent-hooks",
+  "title": "Build the hooks that the prompt can't be trusted with",
+  "tasks": [
+   "1.5"
+  ],
+  "core": false,
+  "short": "Build the hooks that the prompt can't "
+ },
+ {
+  "id": 38,
+  "slug": "lab-38-coordinator-and-subagents",
+  "title": "Be the coordinator: brief your subagents or they work blind",
+  "tasks": [
+   "1.2",
+   "1.3"
+  ],
+  "core": false,
+  "short": "coordinator: brief your subagents or t"
+ },
+ {
+  "id": 39,
+  "slug": "lab-39-tool-design-and-tool-choice",
+  "title": "Write the tool description Claude actually reads",
+  "tasks": [
+   "2.1",
+   "2.3"
+  ],
+  "core": false,
+  "short": "tool description Claude actually reads"
+ },
+ {
+  "id": 40,
+  "slug": "lab-40-build-an-mcp-server",
+  "title": "Build an MCP server once, plug it into any agent",
+  "tasks": [
+   "2.4"
+  ],
+  "core": false,
+  "short": "MCP server once, plug it into any agen"
+ },
+ {
+  "id": 41,
+  "slug": "lab-41-skills-and-path-rules",
+  "title": "Teach Claude Code your repo: a /review skill and a rule that loads only for tests",
+  "tasks": [
+   "3.2",
+   "3.3"
+  ],
+  "core": false,
+  "short": "a /review skill and a rule that loads "
+ },
+ {
+  "id": 42,
+  "slug": "lab-42-claude-code-in-ci",
+  "title": "Put Claude Code in the pipeline and let the exit code decide",
+  "tasks": [
+   "3.6"
+  ],
+  "core": false,
+  "short": "Claude Code in the pipeline and let th"
+ },
+ {
+  "id": 43,
+  "slug": "lab-43-structured-output",
+  "title": "Valid JSON is the floor: check the meaning yourself",
+  "tasks": [
+   "4.3"
+  ],
+  "core": false,
+  "short": "check the meaning yourself"
+ },
+ {
+  "id": 44,
+  "slug": "lab-44-message-batches",
+  "title": "Half price, no hurry: triage tickets with the Batches API",
+  "tasks": [
+   "4.5"
+  ],
+  "core": false,
+  "short": "triage tickets with the Batches API"
+ },
+ {
+  "id": 45,
+  "slug": "lab-45-context-and-prompt-caching",
+  "title": "Keep the facts, cache the handbook",
+  "tasks": [
+   "5.1"
+  ],
+  "core": false,
+  "short": "cache the handbook"
+ },
+ {
+  "id": 46,
+  "slug": "lab-46-error-propagation",
+  "title": "When a subagent fails, tell the coordinator everything",
+  "tasks": [
+   "5.3"
+  ],
+  "core": false,
+  "short": "subagent fails, tell the coordinator e"
+ }
+]

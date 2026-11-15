@@ -1,0 +1,170 @@
+{
+  "case_id": "CS-06",
+  "title": "Transient backend timeout",
+  "message": "Where is ORD-5504? It has been a week.",
+  "customer": {
+    "email": "meilin@example.com"
+  },
+  "tool_calls": [
+    {
+      "tool": "get_customer",
+      "input": {
+        "email": "meilin@example.com",
+        "name": "Meilin"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"customer_id\": \"C-1001\", \"name\": \"Mei Lin Tan\", \"email\": \"meilin@example.com\", \"tier\": \"standard\", \"created_at\": \"2026-01-01T00:00:00Z\", \"status\": \"pending\"}"
+          }
+        ]
+      },
+      "is_error": false
+    },
+    {
+      "tool": "lookup_order",
+      "input": {
+        "order_id": "ORD-5504",
+        "customer_id": "C-1001"
+      },
+      "result": "{\"error\": true, \"errorCategory\": \"transient\", \"isRetryable\": true, \"message\": \"Order service timed out after 3000 ms\", \"attempted_query\": \"ORD-5504\"}",
+      "is_error": true
+    },
+    {
+      "tool": "lookup_order",
+      "input": {
+        "order_id": "ORD-5504",
+        "customer_id": "C-1001"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"order_id\": \"ORD-5504\", \"customer_id\": \"C-1001\", \"amount\": 60.0, \"item\": \"Monitor arm\", \"placed_at\": \"2026-10-30T00:00:00Z\", \"status\": \"shipped\", \"damage_photo\": false, \"charges\": 1, \"shipped\": true, \"eta\": \"2026-11-09\"}"
+          }
+        ]
+      },
+      "is_error": false
+    }
+  ],
+  "hooks": [
+    {
+      "event": "PreToolUse",
+      "tool": "get_customer",
+      "args": {
+        "email": "meilin@example.com",
+        "name": "Meilin"
+      },
+      "decision": "allow",
+      "reason": null
+    },
+    {
+      "event": "PostToolUse",
+      "tool": "get_customer",
+      "raw": {
+        "customer_id": "C-1001",
+        "name": "Mei Lin Tan",
+        "email": "meilin@example.com",
+        "tier": "standard",
+        "created_at": 1767225600,
+        "status": 1
+      },
+      "normalised": {
+        "customer_id": "C-1001",
+        "name": "Mei Lin Tan",
+        "email": "meilin@example.com",
+        "tier": "standard",
+        "created_at": "2026-01-01T00:00:00Z",
+        "status": "pending"
+      }
+    },
+    {
+      "event": "PreToolUse",
+      "tool": "lookup_order",
+      "args": {
+        "order_id": "ORD-5504",
+        "customer_id": "C-1001"
+      },
+      "decision": "allow",
+      "reason": null
+    },
+    {
+      "event": "PostToolUse",
+      "tool": "lookup_order",
+      "raw": {
+        "error": true,
+        "errorCategory": "transient",
+        "isRetryable": true,
+        "message": "Order service timed out after 3000 ms",
+        "attempted_query": "ORD-5504"
+      },
+      "error": true
+    },
+    {
+      "event": "PreToolUse",
+      "tool": "lookup_order",
+      "args": {
+        "order_id": "ORD-5504",
+        "customer_id": "C-1001"
+      },
+      "decision": "allow",
+      "reason": null
+    },
+    {
+      "event": "PostToolUse",
+      "tool": "lookup_order",
+      "raw": {
+        "order_id": "ORD-5504",
+        "customer_id": "C-1001",
+        "amount": 60.0,
+        "item": "Monitor arm",
+        "placed_at": 1793318400,
+        "status": 2,
+        "damage_photo": false,
+        "charges": 1,
+        "shipped": true,
+        "eta": "2026-11-09"
+      },
+      "normalised": {
+        "order_id": "ORD-5504",
+        "customer_id": "C-1001",
+        "amount": 60.0,
+        "item": "Monitor arm",
+        "placed_at": "2026-10-30T00:00:00Z",
+        "status": "shipped",
+        "damage_photo": false,
+        "charges": 1,
+        "shipped": true,
+        "eta": "2026-11-09"
+      }
+    }
+  ],
+  "assistant_text": [
+    "CASE FACTS\n- Customer: C-1001 (Mei Lin Tan), verified\n- Order: ORD-5504, Monitor arm, $60.00\n- Placed: 2026-10-30\n- Status: shipped (shipped = true)\n- ETA: 2026-11-09 (5 days ago)\n- Charges: 1\n\nHi Mei Lin, thanks for your patience. ORD-5504 (monitor arm, $60.00) was placed on October 30 and marked shipped. Its estimated delivery date was November 9, so it is now five days past that date. Our order system shows only \"shipped\" and does not include carrier tracking details, so I can't tell you where the package is right now.\n\nYour card was charged once, so there is no billing issue. If you'd like, I can pass this to a human agent who can investigate with the carrier and help find or replace the package. Would you like me to do that?"
+  ],
+  "settings": {
+    "model": "claude-haiku-5-5",
+    "gate": true,
+    "limit_hook": true
+  },
+  "turn_replies": [
+    "CASE FACTS\n- Customer: C-1001 (Mei Lin Tan), verified\n- Order: ORD-5504, Monitor arm, $60.00\n- Placed: 2026-10-30\n- Status: shipped (shipped = true)\n- ETA: 2026-11-09 (5 days ago)\n- Charges: 1\n\nHi Mei Lin, thanks for your patience. ORD-5504 (monitor arm, $60.00) was placed on October 30 and marked shipped. Its estimated delivery date was November 9, so it is now five days past that date. Our order system shows only \"shipped\" and does not include carrier tracking details, so I can't tell you where the package is right now.\n\nYour card was charged once, so there is no billing issue. If you'd like, I can pass this to a human agent who can investigate with the carrier and help find or replace the package. Would you like me to do that?"
+  ],
+  "result": {
+    "subtype": "success",
+    "stop_reason": "end_turn",
+    "num_turns": 4,
+    "total_cost_usd": 0.000773085,
+    "session_id": "052eaaac-4854-4130-92e6-e2097d67aa2d",
+    "is_error": false,
+    "terminal_reason": "completed"
+  },
+  "reply": "CASE FACTS\n- Customer: C-1001 (Mei Lin Tan), verified\n- Order: ORD-5504, Monitor arm, $60.00\n- Placed: 2026-10-30\n- Status: shipped (shipped = true)\n- ETA: 2026-11-09 (5 days ago)\n- Charges: 1\n\nHi Mei Lin, thanks for your patience. ORD-5504 (monitor arm, $60.00) was placed on October 30 and marked shipped. Its estimated delivery date was November 9, so it is now five days past that date. Our order system shows only \"shipped\" and does not include carrier tracking details, so I can't tell you where the package is right now.\n\nYour card was charged once, so there is no billing issue. If you'd like, I can pass this to a human agent who can investigate with the carrier and help find or replace the package. Would you like me to do that?",
+  "backend_state": {
+    "refunds": [],
+    "escalations": [],
+    "validated_refunds": {},
+    "validation_log": []
+  }
+}

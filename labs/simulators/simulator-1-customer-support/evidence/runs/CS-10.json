@@ -1,0 +1,139 @@
+{
+  "case_id": "CS-10",
+  "title": "Frustrated customer, routine case",
+  "message": "This is ridiculous. ORD-5501 shows delivered but I am not sure the tracking is right. Sort it out.",
+  "customer": {
+    "email": "meilin@example.com"
+  },
+  "tool_calls": [
+    {
+      "tool": "get_customer",
+      "input": {
+        "email": "meilin@example.com",
+        "name": "Meilin"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"customer_id\": \"C-1001\", \"name\": \"Mei Lin Tan\", \"email\": \"meilin@example.com\", \"tier\": \"standard\", \"created_at\": \"2026-01-01T00:00:00Z\", \"status\": \"pending\"}"
+          }
+        ]
+      },
+      "is_error": false
+    },
+    {
+      "tool": "lookup_order",
+      "input": {
+        "order_id": "ORD-5501",
+        "customer_id": "C-1001"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"order_id\": \"ORD-5501\", \"customer_id\": \"C-1001\", \"amount\": 120.0, \"item\": \"Ceramic table lamp\", \"placed_at\": \"2026-10-01T00:00:00Z\", \"status\": \"delivered\", \"damage_photo\": true, \"charges\": 1, \"shipped\": true, \"eta\": \"2026-10-06\"}"
+          }
+        ]
+      },
+      "is_error": false
+    }
+  ],
+  "hooks": [
+    {
+      "event": "PreToolUse",
+      "tool": "get_customer",
+      "args": {
+        "email": "meilin@example.com",
+        "name": "Meilin"
+      },
+      "decision": "allow",
+      "reason": null
+    },
+    {
+      "event": "PostToolUse",
+      "tool": "get_customer",
+      "raw": {
+        "customer_id": "C-1001",
+        "name": "Mei Lin Tan",
+        "email": "meilin@example.com",
+        "tier": "standard",
+        "created_at": 1767225600,
+        "status": 1
+      },
+      "normalised": {
+        "customer_id": "C-1001",
+        "name": "Mei Lin Tan",
+        "email": "meilin@example.com",
+        "tier": "standard",
+        "created_at": "2026-01-01T00:00:00Z",
+        "status": "pending"
+      }
+    },
+    {
+      "event": "PreToolUse",
+      "tool": "lookup_order",
+      "args": {
+        "order_id": "ORD-5501",
+        "customer_id": "C-1001"
+      },
+      "decision": "allow",
+      "reason": null
+    },
+    {
+      "event": "PostToolUse",
+      "tool": "lookup_order",
+      "raw": {
+        "order_id": "ORD-5501",
+        "customer_id": "C-1001",
+        "amount": 120.0,
+        "item": "Ceramic table lamp",
+        "placed_at": 1790812800,
+        "status": 3,
+        "damage_photo": true,
+        "charges": 1,
+        "shipped": true,
+        "eta": "2026-10-06"
+      },
+      "normalised": {
+        "order_id": "ORD-5501",
+        "customer_id": "C-1001",
+        "amount": 120.0,
+        "item": "Ceramic table lamp",
+        "placed_at": "2026-10-01T00:00:00Z",
+        "status": "delivered",
+        "damage_photo": true,
+        "charges": 1,
+        "shipped": true,
+        "eta": "2026-10-06"
+      }
+    }
+  ],
+  "assistant_text": [
+    "CASE FACTS\n- Customer: Mei Lin Tan, C-1001 (verified, status: pending)\n- ORD-5501: Ceramic table lamp, $120.00\n- Placed: 2026-10-01; shipped: yes; ETA: 2026-10-06\n- Status: delivered; charges: 1 (no duplicate)\n- Damage photo on file: yes\n\nResolution: Our order record shows ORD-5501 as shipped and delivered, with an ETA of 2026-10-06. It was charged once. I can only see the status in our system, not the carrier's scan history, so I can't confirm the tracking details beyond that.\n\nIf you did not receive the lamp, or it arrived damaged, please tell me which. A damage photo is already on file for this order. If the lamp is damaged, I can review a refund of $120.00 under our damage policy. If you have a different concern, tell me what it is and I'll look into it."
+  ],
+  "settings": {
+    "model": "claude-haiku-5-5",
+    "gate": true,
+    "limit_hook": true
+  },
+  "turn_replies": [
+    "CASE FACTS\n- Customer: Mei Lin Tan, C-1001 (verified, status: pending)\n- ORD-5501: Ceramic table lamp, $120.00\n- Placed: 2026-10-01; shipped: yes; ETA: 2026-10-06\n- Status: delivered; charges: 1 (no duplicate)\n- Damage photo on file: yes\n\nResolution: Our order record shows ORD-5501 as shipped and delivered, with an ETA of 2026-10-06. It was charged once. I can only see the status in our system, not the carrier's scan history, so I can't confirm the tracking details beyond that.\n\nIf you did not receive the lamp, or it arrived damaged, please tell me which. A damage photo is already on file for this order. If the lamp is damaged, I can review a refund of $120.00 under our damage policy. If you have a different concern, tell me what it is and I'll look into it."
+  ],
+  "result": {
+    "subtype": "success",
+    "stop_reason": "end_turn",
+    "num_turns": 3,
+    "total_cost_usd": 0.00088075,
+    "session_id": "6e8f36a9-81ef-425d-9b21-f4f85d824975",
+    "is_error": false,
+    "terminal_reason": "completed"
+  },
+  "reply": "CASE FACTS\n- Customer: Mei Lin Tan, C-1001 (verified, status: pending)\n- ORD-5501: Ceramic table lamp, $120.00\n- Placed: 2026-10-01; shipped: yes; ETA: 2026-10-06\n- Status: delivered; charges: 1 (no duplicate)\n- Damage photo on file: yes\n\nResolution: Our order record shows ORD-5501 as shipped and delivered, with an ETA of 2026-10-06. It was charged once. I can only see the status in our system, not the carrier's scan history, so I can't confirm the tracking details beyond that.\n\nIf you did not receive the lamp, or it arrived damaged, please tell me which. A damage photo is already on file for this order. If the lamp is damaged, I can review a refund of $120.00 under our damage policy. If you have a different concern, tell me what it is and I'll look into it.",
+  "backend_state": {
+    "refunds": [],
+    "escalations": [],
+    "validated_refunds": {},
+    "validation_log": []
+  }
+}

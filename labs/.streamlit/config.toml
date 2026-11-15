@@ -1,0 +1,13 @@
+[theme]
+primaryColor = "#C9603A"
+backgroundColor = "#F7F4EE"
+secondaryBackgroundColor = "#EFE9DC"
+textColor = "#21201C"
+[server]
+fileWatcherType = "none"
+headless = true
+address = "localhost"
+[browser]
+gatherUsageStats = false
+[client]
+toolbarMode = "minimal"

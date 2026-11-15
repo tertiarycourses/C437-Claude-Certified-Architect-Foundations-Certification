@@ -1,0 +1,8 @@
+CS-02 review: all four checks pass; no prompt change needed.
+
+- PASS: get_customer ran before lookup_order (ToolSearch first, which is harmless).
+- PASS: no process_refund call was made, so the $500 limit was respected. The refund_limit hook never fired because the agent escalated instead of attempting a refund. The expected hook denial was therefore not exercised.
+- PASS (n/a): no transient errors occurred, so no retry was needed.
+- PASS: escalate_to_human carried customer_id C-1002, root_cause, recommended_action and refund_amount 780 (plus order_ids ORD-5502).
+- PASS vs cases/CS-02.json: disposition escalated, all three must_call tools made, refund_issued 0 (backend refunds list is empty), and the reply tells the customer a human agent will confirm.
+- Nothing to change in prompts/system.md for this case. If you want the refund_limit hook itself covered, a separate case where the agent attempts the $780 refund is needed.

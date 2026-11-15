@@ -1,0 +1,87 @@
+{
+  "id": "UC-39",
+  "question_n": 39,
+  "timestamp": "95:06",
+  "title": "Testable report/skip rules beat 'report only high-confidence issues'",
+  "type": "run",
+  "correct": "A",
+  "expected_outcome": "On stock/pricing.py the vague prompt may comment on names and style; the categorical criteria return the None dereference in getPrice and nothing about naming.",
+  "model": "claude-haiku-5-5",
+  "tasks": {
+    "t1": {
+      "kind": "claude",
+      "elapsed_s": 8.9,
+      "exit_code": 0,
+      "command": "claude -p Review stock/pricing.py (added in PR 418). Report only issues you a\u2026 --model claude-haiku-5-5 --output-format json --max-turns 4 --permission-mode dontAsk --allowedTools Read Grep Glob --json-schema {\"title\": \"CI review findings\", \"type\": \"object\", \"required\": [\"pas\u2026",
+      "subtype": "success",
+      "result": "{\"pass\":\"per-file\",\"findings\":[{\"file\":\"stock/pricing.py\",\"line\":12,\"severity\":\"medium\",\"category\":\"bug\",\"detected_pattern\":\"p = CATALOG.get(sku) followed by p[\\\"amount\\\"] with no None check\",\"issue\":\"getPrice() does not handle an unknown SKU. CATALOG.get(sku) returns None, so p[\\\"amount\\\"] raises TypeError ('NoneType' object is not subscriptable). total_price() calls getPrice() for every SKU, so one unknown SKU in a basket crashes the whole total with an unclear error instead of a meaningful lookup failure.\",\"suggested_fix\":\"Check for None before indexing. Either raise a descriptive exception (e.g. KeyError/ValueError naming the SKU) or return a documented sentinel, and have total_price() handle it consistently. Example: if p is None: raise KeyError(f\\\"unknown SKU: {sku}\\\"); return p[\\\"amount\\\"].\",\"confidence\":0.95}]}",
+      "session_id": "973dcd8b-1277-4e16-84fd-643202dd81e3",
+      "total_cost_usd": 0.005629504999999999,
+      "num_turns": 5,
+      "structured_output": {
+        "pass": "per-file",
+        "findings": [
+          {
+            "file": "stock/pricing.py",
+            "line": 12,
+            "severity": "medium",
+            "category": "bug",
+            "detected_pattern": "p = CATALOG.get(sku) followed by p[\"amount\"] with no None check",
+            "issue": "getPrice() does not handle an unknown SKU. CATALOG.get(sku) returns None, so p[\"amount\"] raises TypeError ('NoneType' object is not subscriptable). total_price() calls getPrice() for every SKU, so one unknown SKU in a basket crashes the whole total with an unclear error instead of a meaningful lookup failure.",
+            "suggested_fix": "Check for None before indexing. Either raise a descriptive exception (e.g. KeyError/ValueError naming the SKU) or return a documented sentinel, and have total_price() handle it consistently. Example: if p is None: raise KeyError(f\"unknown SKU: {sku}\"); return p[\"amount\"].",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "permission_denials": [],
+      "is_error": false
+    },
+    "t2": {
+      "kind": "claude",
+      "elapsed_s": 18.8,
+      "exit_code": 0,
+      "command": "claude -p Review stock/pricing.py (added in PR 418).\nREVIEW CRITERIA (explici\u2026 --model claude-haiku-5-5 --output-format json --max-turns 4 --permission-mode dontAsk --allowedTools Read Grep Glob --json-schema {\"title\": \"CI review findings\", \"type\": \"object\", \"required\": [\"pas\u2026",
+      "subtype": "success",
+      "result": "{\"pass\":\"per-file\",\"findings\":[{\"file\":\"stock/pricing.py\",\"line\":12,\"severity\":\"medium\",\"category\":\"bug\",\"detected_pattern\":\"p[\\\"amount\\\"] on CATALOG.get(sku) result without None check\",\"issue\":\"getPrice is documented to return the catalogue price for a SKU, but for a SKU not in CATALOG, CATALOG.get returns None and p[\\\"amount\\\"] raises an opaque TypeError ('NoneType' object is not subscriptable). total_price passes caller-supplied SKUs straight through, so an unknown SKU crashes the whole total with no clear error. The inline comment acknowledges p is None but the code does not handle it.\",\"suggested_fix\":\"if p is None: raise KeyError(f\\\"unknown SKU: {sku}\\\") before indexing (or return None and have total_price handle it explicitly). Either way, make the unknown-SKU behaviour deliberate and document it in the docstring.\",\"confidence\":0.6}]}",
+      "session_id": "dfce1f0a-3e7e-48b8-84be-993e1d07c023",
+      "total_cost_usd": 0.00414944,
+      "num_turns": 5,
+      "structured_output": {
+        "pass": "per-file",
+        "findings": [
+          {
+            "file": "stock/pricing.py",
+            "line": 12,
+            "severity": "medium",
+            "category": "bug",
+            "detected_pattern": "p[\"amount\"] on CATALOG.get(sku) result without None check",
+            "issue": "getPrice is documented to return the catalogue price for a SKU, but for a SKU not in CATALOG, CATALOG.get returns None and p[\"amount\"] raises an opaque TypeError ('NoneType' object is not subscriptable). total_price passes caller-supplied SKUs straight through, so an unknown SKU crashes the whole total with no clear error. The inline comment acknowledges p is None but the code does not handle it.",
+            "suggested_fix": "if p is None: raise KeyError(f\"unknown SKU: {sku}\") before indexing (or return None and have total_price handle it explicitly). Either way, make the unknown-SKU behaviour deliberate and document it in the docstring.",
+            "confidence": 0.6
+          }
+        ]
+      },
+      "permission_denials": [],
+      "is_error": false
+    }
+  },
+  "restores": [],
+  "cost_usd": 0.0098,
+  "evaluation": [
+    {
+      "criterion": "with categorical criteria the None dereference in getPrice is reported as a bug",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "criterion": "with categorical criteria no naming or style comment appears",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "criterion": "compare both outputs: the vague prompt is allowed to return style/naming categories and usually does",
+      "pass": true,
+      "note": "reviewed against the expected answer"
+    }
+  ]
+}

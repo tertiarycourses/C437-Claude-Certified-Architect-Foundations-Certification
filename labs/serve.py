@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+"""Start the six simulators in your browser: uv run serve.py
+
+Python, the Claude Agent SDK and the Claude API on your ANTHROPIC_API_KEY (labs/.env). Every Claude call uses Claude Haiku 5.5."""
+import argparse, os, socket, subprocess, sys, threading
+from pathlib import Path
+for k in ("ANTHROPIC_AUTH_TOKEN", "CLAUDECODE"): os.environ.pop(k, None)  # the API key stays: the labs run on it
+ap = argparse.ArgumentParser(description=__doc__); ap.add_argument("--port", type=int, default=8765); ap.add_argument("--no-open", action="store_true"); a = ap.parse_args()
+def free(p):
+    with socket.socket() as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try: s.bind(("127.0.0.1", p)); return True
+        except OSError: return False
+port = next((p for p in range(a.port, a.port + 25) if free(p)), None)
+if port is None: sys.exit(f"No free port near {a.port}. Try: uv run serve.py --port 9000")
+if port != a.port: print(f"Port {a.port} is busy, using {port}.")
+print(f"Six simulators at http://localhost:{port}  (Ctrl+C to stop)")
+os.chdir(Path(__file__).parent)
+def warm():  # an iCloud folder may hold only placeholders. Bring the simulators back now, not in the middle of a lab.
+    import concurrent.futures as cf
+    def touch(p):
+        try:
+            if getattr(os.stat(p), "st_flags", 0) & 0x40000000: open(p, "rb").read(1)
+        except OSError: pass
+    with cf.ThreadPoolExecutor(8) as pool:
+        for d, dirs, files in os.walk("simulators"):
+            dirs[:] = [x for x in dirs if x not in {"work", ".venv", "__pycache__", "node_modules"}]
+            pool.map(touch, [os.path.join(d, f) for f in files])
+threading.Thread(target=warm, daemon=True).start()
+os.environ.update(PYTHONUTF8="1", PYTHONIOENCODING="utf-8")  # Windows defaults to cp1252; every lab file is UTF-8
+if os.name == "nt":  # Git installed during setup isn't on this shell's PATH yet; Simulators 2 and 5 need git and sh
+    git = Path(os.environ.get("ProgramFiles", r"C:\Program Files")) / "Git"
+    extra = [str(p) for p in (git / "cmd", git / "usr" / "bin") if p.is_dir()]
+    os.environ["PATH"] = os.pathsep.join(extra + [os.environ.get("PATH", "")])
+sys.exit(subprocess.call([sys.executable, "-m", "streamlit", "run", "app.py", "--server.port", str(port), "--server.address", "localhost", "--server.headless", "true" if a.no_open else "false"]))

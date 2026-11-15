@@ -1,0 +1,109 @@
+{
+  "id": "UC-5",
+  "question_n": 5,
+  "timestamp": "09:59",
+  "title": "Fork a saved plan-mode session twice, checkpoint files before each attempt",
+  "type": "run",
+  "correct": "B",
+  "expected_outcome": "Three session ids: the baseline and two forks that differ from it and from each other. Attempt B starts from restored files, so attempt A's edits never leak into it.",
+  "model": "claude-haiku-5-5",
+  "tasks": {
+    "t0": {
+      "kind": "claude",
+      "elapsed_s": 13.4,
+      "exit_code": 0,
+      "command": "claude -p Plan mode investigation only: formatDate in src/utils/formatDate.js\u2026 --model claude-haiku-5-5 --output-format json --max-turns 4 --permission-mode plan --allowedTools Read Grep Glob --name uc5-baseline",
+      "subtype": "success",
+      "result": "Read-only investigation; nothing edited. Five lines:\n\n1. **Crash path confirmed:** `src/api/orders.js:12` calls `formatDate(order.shippedAt)` on every `getOrder`, and `tests/fixtures/orders.json:3` (ORD-1002) has `shippedAt: null`, so that fixture reproduces the bug.\n2. **Same crash class elsewhere:** `src/services/invoice.ts:7` passes `inv.dueAt` to `formatDate`, but the `Invoice` type declares `dueAt: Date | null` (`invoice.ts:4`), so a null due date throws there too. `src/services/report.ts:4` is typed `Date` and is safe only if callers never pass null.\n3. **Minimal patch:** in `src/utils/formatDate.js`, add `if (date == null) return null;` before the `toISOString` line, then add a regression test using the ORD-1002 fixture that fails before the change. This is a contract change: callers now get `null` back, and `invoice.ts` would print `due null`, so it should render a placeholder such as `\"\u2014\"` in the template.\n4. **Larger refactor:** convert `formatDate` to TypeScript with overloads: `formatDate(d: Date): string` and `formatDate(d: Date | null | undefined): string | null`, so the compiler flags null-unsafe callers. Split the null-safe path into a named helper such as `formatDateOrDash` and move the nullable decision into the call sites that know the field is optional.\n5. **Caveats:** `orders.js` is plain JS, so the type checker won't cover it without JSDoc or migrating it, and `.claude/rules/api-handlers.md` requires `ApiError` with a stable `code` and `zod` validation for handlers, which `getOrder` does not follow yet. I did not write the plan file, since you asked for a report and not a plan.",
+      "session_id": "7f5354a6-79ae-4511-a95d-14458de5e925",
+      "total_cost_usd": 0.00336219,
+      "num_turns": 8,
+      "structured_output": null,
+      "permission_denials": [],
+      "is_error": false
+    },
+    "t1": {
+      "kind": "claude",
+      "elapsed_s": 7.8,
+      "exit_code": 0,
+      "command": "claude -p Attempt A from this analysis: implement ONLY the minimal patch to s\u2026 --model claude-haiku-5-5 --output-format json --max-turns 6 --permission-mode acceptEdits --allowedTools Read Edit Write Grep Glob --resume 7f5354a6-79ae-4511-a95d-14458de5e925 --fork-session",
+      "subtype": "success",
+      "result": "I changed `src/utils/formatDate.js` only. It now returns `null` for a null or undefined date:\n\n```js\nexport function formatDate(date) {\n  if (date == null) return null;\n  return date.toISOString().slice(0, 10);\n}\n```\n\nThree things are still open:\n- **No regression test.** `CLAUDE.md` requires one for every bug fix, and it should use the ORD-1002 fixture. You limited me to one file, so I didn't add it.\n- **Tests not run.** I didn't run `npm test -- --changed`, so this change is unverified beyond reading the code.\n- **`invoice.ts` output changes.** A null `dueAt` now renders as `due null` in `renderInvoiceHeader`. It no longer throws, but a placeholder such as `\"\u2014\"` would read better; that needs a change in `invoice.ts`.",
+      "session_id": "b644fbac-dec4-4ab5-98a4-de8fa2ae5d0c",
+      "total_cost_usd": 0.004626265,
+      "num_turns": 2,
+      "structured_output": null,
+      "permission_denials": [],
+      "is_error": false,
+      "files_changed": [
+        "src/utils/formatDate.js"
+      ]
+    },
+    "t2": {
+      "kind": "claude",
+      "elapsed_s": 43.4,
+      "exit_code": 0,
+      "command": "claude -p Attempt B from this analysis: implement the larger refactor you des\u2026 --model claude-haiku-5-5 --output-format json --max-turns 8 --permission-mode acceptEdits --allowedTools Read Edit Write Grep Glob --resume 7f5354a6-79ae-4511-a95d-14458de5e925 --fork-session",
+      "subtype": "success",
+      "result": "The refactor is in place, but I could not run the tests. Node execution needs approval in this session, and I was blocked twice, so nothing has been executed or verified by running.\n\n**What changed**\n- **New `src/utils/dates.js`**: `formatDate(date)` takes a required `Date` and throws a `TypeError` for anything else. `formatDateOrNull(date)` returns `null` for `null` or `undefined`.\n- **Callers**:\n  - `src/api/orders.js` uses `formatDateOrNull` for `shippedAt`, so unshipped orders return `null` instead of crashing.\n  - `src/services/invoice.ts` uses `formatDate` for `issuedAt` and `formatDateOrNull` for `dueAt`. A missing due date now renders as `due none`, which is a visible output change.\n  - `src/services/report.ts` uses `formatDate`.\n- **Removed**: `src/utils/formatDate.js`. Grep shows no remaining references to it.\n- **README**: the API reference now describes both functions.\n- **New `tests/dates.test.js`**: covers expected output, a day-boundary edge case, and the null failure path for `formatDate`. It also covers the ORD-1002 fixture (`shippedAt: null`) and `undefined` for `formatDateOrNull`. I used `node:test` `describe`/`it` to follow the project's naming rule.\n\n**Not done or not verified**\n- **Tests have not been run.** I did not run `npm test` or `npm test -- --changed`, so I have not confirmed that the regression test fails before the fix or passes after it.\n- **The `.claude/rules/api-handlers.md` conventions are not applied to `getOrder`.** It has no `try/catch`, no `ApiError` with a `code`, and no `zod` validation. I left those alone because they are outside the refactor. I did not check whether `ApiError` exists in the repo.\n- **Commit and PR were not made**, and the repo already had uncommitted state from earlier steps. Tell me if you want a commit.\n\nTo finish verification, approve `npm test` (or `node --test tests/`) and I'll run it.",
+      "session_id": "dd9258a6-094d-4e04-988f-b46c856f5726",
+      "total_cost_usd": 0.011138300000000002,
+      "num_turns": 15,
+      "structured_output": null,
+      "permission_denials": [
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01TdBrND3qhmBtM8KEB22Dhj",
+          "tool_input": {
+            "command": "node --test tests/dates.test.js 2>&1 | tail -15",
+            "description": "Run new regression test before the fix"
+          }
+        },
+        {
+          "tool_name": "Bash",
+          "tool_use_id": "toolu_01AeKSG4ZPiD44kdJvNgCpT6",
+          "tool_input": {
+            "command": "node --test tests/dates.test.js",
+            "description": "Run new date tests before the fix"
+          }
+        }
+      ],
+      "is_error": false,
+      "files_changed": [
+        "README.md",
+        "src/api/orders.js",
+        "src/services/invoice.ts",
+        "src/services/report.ts",
+        "src/utils/dates.js",
+        "src/utils/formatDate.js",
+        "tests/dates.test.js"
+      ]
+    }
+  },
+  "restores": [
+    "t2"
+  ],
+  "cost_usd": 0.0191,
+  "evaluation": [
+    {
+      "criterion": "both attempts resume the baseline with --fork-session and get new session ids",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "criterion": "attempt A changed only formatDate.js",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "criterion": "files were checkpointed (restored) before attempt B, so a fork is not a filesystem snapshot",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "criterion": "attempt B touched callers as well",
+      "pass": true,
+      "note": ""
+    }
+  ]
+}

@@ -1,0 +1,406 @@
+{
+  "case_id": "CS-12",
+  "title": "Long multi-order conversation: case facts survive summarisation",
+  "message": "(multi-turn, see turns)",
+  "customer": {
+    "email": "meilin@example.com"
+  },
+  "tool_calls": [
+    {
+      "tool": "get_customer",
+      "input": {
+        "email": "meilin@example.com",
+        "name": "Meilin"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"customer_id\": \"C-1001\", \"name\": \"Mei Lin Tan\", \"email\": \"meilin@example.com\", \"tier\": \"standard\", \"created_at\": \"2026-01-01T00:00:00Z\", \"status\": \"pending\"}"
+          }
+        ]
+      },
+      "is_error": false
+    },
+    {
+      "tool": "lookup_order",
+      "input": {
+        "order_id": "ORD-5501",
+        "customer_id": "C-1001"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"order_id\": \"ORD-5501\", \"customer_id\": \"C-1001\", \"amount\": 120.0, \"item\": \"Ceramic table lamp\", \"placed_at\": \"2026-10-01T00:00:00Z\", \"status\": \"delivered\", \"damage_photo\": true, \"charges\": 1, \"shipped\": true, \"eta\": \"2026-10-06\"}"
+          }
+        ]
+      },
+      "is_error": false
+    },
+    {
+      "tool": "lookup_order",
+      "input": {
+        "order_id": "ORD-5503",
+        "customer_id": "C-1001"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"order_id\": \"ORD-5503\", \"customer_id\": \"C-1001\", \"amount\": 45.0, \"item\": \"Desk organiser\", \"placed_at\": \"2026-10-24T00:00:00Z\", \"status\": \"delivered\", \"damage_photo\": false, \"charges\": 2, \"shipped\": true, \"eta\": \"2026-10-28\"}"
+          }
+        ]
+      },
+      "is_error": false
+    },
+    {
+      "tool": "lookup_order",
+      "input": {
+        "order_id": "ORD-5504",
+        "customer_id": "C-1001"
+      },
+      "result": "{\"error\": true, \"errorCategory\": \"transient\", \"isRetryable\": true, \"message\": \"Order service timed out after 3000 ms\", \"attempted_query\": \"ORD-5504\"}",
+      "is_error": true
+    },
+    {
+      "tool": "lookup_order",
+      "input": {
+        "order_id": "ORD-5504",
+        "customer_id": "C-1001"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"order_id\": \"ORD-5504\", \"customer_id\": \"C-1001\", \"amount\": 60.0, \"item\": \"Monitor arm\", \"placed_at\": \"2026-10-30T00:00:00Z\", \"status\": \"shipped\", \"damage_photo\": false, \"charges\": 1, \"shipped\": true, \"eta\": \"2026-11-09\"}"
+          }
+        ]
+      },
+      "is_error": false
+    },
+    {
+      "tool": "recommend_refund",
+      "input": {
+        "order_id": "ORD-5503",
+        "item_adjustments": [
+          {
+            "sku": "WHOLE",
+            "amount": 45
+          }
+        ],
+        "shipping_refund": 0,
+        "merchandise_credit": 0,
+        "refund_total": 45,
+        "rationale": "Duplicate charge: lookup_order shows 2 charges on a $45.00 order; refunding the extra $45.00 charge per policy. Customer approved this refund."
+      },
+      "result": "{\"validated\": true, \"order_id\": \"ORD-5503\", \"cash_refund\": 45.0, \"merchandise_credit\": 0.0, \"message\": \"Recommendation validated. You may call process_refund for the cash amount.\"}",
+      "is_error": false
+    },
+    {
+      "tool": "process_refund",
+      "input": {
+        "order_id": "ORD-5503",
+        "amount": 45,
+        "reason": "Duplicate charge: order ORD-5503 was charged twice; refunding extra $45.00 charge."
+      },
+      "result": "{\"refund_id\": \"RF-86138\", \"order_id\": \"ORD-5503\", \"amount\": 45.0, \"reason\": \"Duplicate charge: order ORD-5503 was charged twice; refunding extra $45.00 charge.\", \"status\": \"issued\"}",
+      "is_error": false
+    }
+  ],
+  "hooks": [
+    {
+      "event": "PreToolUse",
+      "tool": "get_customer",
+      "args": {
+        "email": "meilin@example.com",
+        "name": "Meilin"
+      },
+      "decision": "allow",
+      "reason": null
+    },
+    {
+      "event": "PostToolUse",
+      "tool": "get_customer",
+      "raw": {
+        "customer_id": "C-1001",
+        "name": "Mei Lin Tan",
+        "email": "meilin@example.com",
+        "tier": "standard",
+        "created_at": 1767225600,
+        "status": 1
+      },
+      "normalised": {
+        "customer_id": "C-1001",
+        "name": "Mei Lin Tan",
+        "email": "meilin@example.com",
+        "tier": "standard",
+        "created_at": "2026-01-01T00:00:00Z",
+        "status": "pending"
+      }
+    },
+    {
+      "event": "PreToolUse",
+      "tool": "lookup_order",
+      "args": {
+        "order_id": "ORD-5501",
+        "customer_id": "C-1001"
+      },
+      "decision": "allow",
+      "reason": null
+    },
+    {
+      "event": "PostToolUse",
+      "tool": "lookup_order",
+      "raw": {
+        "order_id": "ORD-5501",
+        "customer_id": "C-1001",
+        "amount": 120.0,
+        "item": "Ceramic table lamp",
+        "placed_at": 1790812800,
+        "status": 3,
+        "damage_photo": true,
+        "charges": 1,
+        "shipped": true,
+        "eta": "2026-10-06"
+      },
+      "normalised": {
+        "order_id": "ORD-5501",
+        "customer_id": "C-1001",
+        "amount": 120.0,
+        "item": "Ceramic table lamp",
+        "placed_at": "2026-10-01T00:00:00Z",
+        "status": "delivered",
+        "damage_photo": true,
+        "charges": 1,
+        "shipped": true,
+        "eta": "2026-10-06"
+      }
+    },
+    {
+      "event": "PreToolUse",
+      "tool": "lookup_order",
+      "args": {
+        "order_id": "ORD-5503",
+        "customer_id": "C-1001"
+      },
+      "decision": "allow",
+      "reason": null
+    },
+    {
+      "event": "PostToolUse",
+      "tool": "lookup_order",
+      "raw": {
+        "order_id": "ORD-5503",
+        "customer_id": "C-1001",
+        "amount": 45.0,
+        "item": "Desk organiser",
+        "placed_at": 1792800000,
+        "status": "delivered",
+        "damage_photo": false,
+        "charges": 2,
+        "shipped": true,
+        "eta": "2026-10-28"
+      },
+      "normalised": {
+        "order_id": "ORD-5503",
+        "customer_id": "C-1001",
+        "amount": 45.0,
+        "item": "Desk organiser",
+        "placed_at": "2026-10-24T00:00:00Z",
+        "status": "delivered",
+        "damage_photo": false,
+        "charges": 2,
+        "shipped": true,
+        "eta": "2026-10-28"
+      }
+    },
+    {
+      "event": "PreToolUse",
+      "tool": "lookup_order",
+      "args": {
+        "order_id": "ORD-5504",
+        "customer_id": "C-1001"
+      },
+      "decision": "allow",
+      "reason": null
+    },
+    {
+      "event": "PostToolUse",
+      "tool": "lookup_order",
+      "raw": {
+        "error": true,
+        "errorCategory": "transient",
+        "isRetryable": true,
+        "message": "Order service timed out after 3000 ms",
+        "attempted_query": "ORD-5504"
+      },
+      "error": true
+    },
+    {
+      "event": "PreToolUse",
+      "tool": "lookup_order",
+      "args": {
+        "order_id": "ORD-5504",
+        "customer_id": "C-1001"
+      },
+      "decision": "allow",
+      "reason": null
+    },
+    {
+      "event": "PostToolUse",
+      "tool": "lookup_order",
+      "raw": {
+        "order_id": "ORD-5504",
+        "customer_id": "C-1001",
+        "amount": 60.0,
+        "item": "Monitor arm",
+        "placed_at": 1793318400,
+        "status": 2,
+        "damage_photo": false,
+        "charges": 1,
+        "shipped": true,
+        "eta": "2026-11-09"
+      },
+      "normalised": {
+        "order_id": "ORD-5504",
+        "customer_id": "C-1001",
+        "amount": 60.0,
+        "item": "Monitor arm",
+        "placed_at": "2026-10-30T00:00:00Z",
+        "status": "shipped",
+        "damage_photo": false,
+        "charges": 1,
+        "shipped": true,
+        "eta": "2026-11-09"
+      }
+    },
+    {
+      "event": "PreToolUse",
+      "tool": "recommend_refund",
+      "args": {
+        "order_id": "ORD-5503",
+        "item_adjustments": [
+          {
+            "sku": "WHOLE",
+            "amount": 45
+          }
+        ],
+        "shipping_refund": 0,
+        "merchandise_credit": 0,
+        "refund_total": 45,
+        "rationale": "Duplicate charge: lookup_order shows 2 charges on a $45.00 order; refunding the extra $45.00 charge per policy. Customer approved this refund."
+      },
+      "decision": "allow",
+      "reason": null
+    },
+    {
+      "event": "PostToolUse",
+      "tool": "recommend_refund",
+      "raw": {
+        "validated": true,
+        "order_id": "ORD-5503",
+        "cash_refund": 45.0,
+        "merchandise_credit": 0.0,
+        "message": "Recommendation validated. You may call process_refund for the cash amount."
+      },
+      "normalised": {
+        "validated": true,
+        "order_id": "ORD-5503",
+        "cash_refund": 45.0,
+        "merchandise_credit": 0.0,
+        "message": "Recommendation validated. You may call process_refund for the cash amount."
+      }
+    },
+    {
+      "event": "PreToolUse",
+      "tool": "process_refund",
+      "args": {
+        "order_id": "ORD-5503",
+        "amount": 45,
+        "reason": "Duplicate charge: order ORD-5503 was charged twice; refunding extra $45.00 charge."
+      },
+      "decision": "allow",
+      "reason": null
+    },
+    {
+      "event": "PostToolUse",
+      "tool": "process_refund",
+      "raw": {
+        "refund_id": "RF-86138",
+        "order_id": "ORD-5503",
+        "amount": 45.0,
+        "reason": "Duplicate charge: order ORD-5503 was charged twice; refunding extra $45.00 charge.",
+        "status": "issued"
+      },
+      "normalised": {
+        "refund_id": "RF-86138",
+        "order_id": "ORD-5503",
+        "amount": 45.0,
+        "reason": "Duplicate charge: order ORD-5503 was charged twice; refunding extra $45.00 charge.",
+        "status": "issued"
+      }
+    }
+  ],
+  "assistant_text": [
+    "**CASE FACTS**\n- Customer: C-1001 (Mei Lin Tan), verified by email\n- ORD-5501: Ceramic table lamp, $120.00, delivered (ETA 2026-10-06), 1 charge, damage photo on file\n- ORD-5503: Desk organiser, $45.00, delivered (ETA 2026-10-28), **2 charges**, no damage photo\n\n**Findings (no refunds issued yet, as you asked):**\n\n1. **ORD-5501 (cracked lamp):** Our records show a damage photo on file, so this qualifies for a refund of the full $120.00 to your original payment method. Note that the order was delivered in early October, so please confirm the photo matches this lamp.\n\n2. **ORD-5503 (possible double charge):** Your card was charged twice for this $45.00 order. The extra charge of **$45.00** is eligible for refund.\n\nReply \"yes\" to approve both refunds ($120.00 for ORD-5501 and $45.00 for ORD-5503, total $165.00 to your original payment method), and I'll process them.",
+    "**CASE FACTS**\n- Customer: C-1001 (Mei Lin Tan), verified\n- ORD-5504: Monitor arm, $60.00, status \"shipped,\" placed 2026-10-30, 1 charge\n- ORD-5504 ETA: **2026-11-09**, which is already past today's date (2026-11-14)\n- ORD-5501: $120.00 lamp, damage photo on file, refund pending your approval\n- ORD-5503: $45.00 desk organiser, 2 charges, $45.00 duplicate refund pending your approval\n\n**ORD-5504 delivery:** The order shows as shipped with an estimated arrival of November 9, 2026. That date has passed and the order has not been marked delivered, so it is late. I can't see a carrier tracking location, so I can't say where it is. I can escalate this to a human agent to trace the shipment.\n\n**Refunds:** I have not processed anything. I need a clear \"yes\" to refund $120.00 (ORD-5501) and $45.00 (ORD-5503), totaling $165.00 to your original payment method. Your last message said \"Thanks,\" which I'm not treating as approval.",
+    "**CASE FACTS**\n- Customer: C-1001 (Mei Lin Tan), verified\n- ORD-5503: Desk organiser, $45.00, 2 charges (duplicate confirmed)\n- Refund **RF-86138**: $45.00 cash, status \"issued\"\n- ORD-5501: $120.00 lamp, refund **not** processed (on hold at your request)\n- ORD-5504: Monitor arm, $60.00, shipped, ETA 2026-11-09 (passed, not yet delivered)\n\nYour duplicate charge refund of $45.00 for ORD-5503 has been issued to your original payment method (refund RF-86138).\n\nThe lamp refund ($120.00 for ORD-5501) is on hold. Let me know if you decide to keep or return it, and I'll process it then.\n\nWould you like me to escalate the late ORD-5504 monitor arm to a human agent to trace the shipment?"
+  ],
+  "settings": {
+    "model": "claude-haiku-5-5",
+    "gate": true,
+    "limit_hook": true
+  },
+  "turn_replies": [
+    "**CASE FACTS**\n- Customer: C-1001 (Mei Lin Tan), verified by email\n- ORD-5501: Ceramic table lamp, $120.00, delivered (ETA 2026-10-06), 1 charge, damage photo on file\n- ORD-5503: Desk organiser, $45.00, delivered (ETA 2026-10-28), **2 charges**, no damage photo\n\n**Findings (no refunds issued yet, as you asked):**\n\n1. **ORD-5501 (cracked lamp):** Our records show a damage photo on file, so this qualifies for a refund of the full $120.00 to your original payment method. Note that the order was delivered in early October, so please confirm the photo matches this lamp.\n\n2. **ORD-5503 (possible double charge):** Your card was charged twice for this $45.00 order. The extra charge of **$45.00** is eligible for refund.\n\nReply \"yes\" to approve both refunds ($120.00 for ORD-5501 and $45.00 for ORD-5503, total $165.00 to your original payment method), and I'll process them.",
+    "**CASE FACTS**\n- Customer: C-1001 (Mei Lin Tan), verified\n- ORD-5504: Monitor arm, $60.00, status \"shipped,\" placed 2026-10-30, 1 charge\n- ORD-5504 ETA: **2026-11-09**, which is already past today's date (2026-11-14)\n- ORD-5501: $120.00 lamp, damage photo on file, refund pending your approval\n- ORD-5503: $45.00 desk organiser, 2 charges, $45.00 duplicate refund pending your approval\n\n**ORD-5504 delivery:** The order shows as shipped with an estimated arrival of November 9, 2026. That date has passed and the order has not been marked delivered, so it is late. I can't see a carrier tracking location, so I can't say where it is. I can escalate this to a human agent to trace the shipment.\n\n**Refunds:** I have not processed anything. I need a clear \"yes\" to refund $120.00 (ORD-5501) and $45.00 (ORD-5503), totaling $165.00 to your original payment method. Your last message said \"Thanks,\" which I'm not treating as approval.",
+    "**CASE FACTS**\n- Customer: C-1001 (Mei Lin Tan), verified\n- ORD-5503: Desk organiser, $45.00, 2 charges (duplicate confirmed)\n- Refund **RF-86138**: $45.00 cash, status \"issued\"\n- ORD-5501: $120.00 lamp, refund **not** processed (on hold at your request)\n- ORD-5504: Monitor arm, $60.00, shipped, ETA 2026-11-09 (passed, not yet delivered)\n\nYour duplicate charge refund of $45.00 for ORD-5503 has been issued to your original payment method (refund RF-86138).\n\nThe lamp refund ($120.00 for ORD-5501) is on hold. Let me know if you decide to keep or return it, and I'll process it then.\n\nWould you like me to escalate the late ORD-5504 monitor arm to a human agent to trace the shipment?"
+  ],
+  "result": {
+    "subtype": "success",
+    "stop_reason": "end_turn",
+    "num_turns": 3,
+    "total_cost_usd": 0.005241599999999999,
+    "session_id": "5ea3ff26-ce55-4421-9e75-5ea2a9cc3847",
+    "is_error": false,
+    "terminal_reason": "completed"
+  },
+  "reply": "**CASE FACTS**\n- Customer: C-1001 (Mei Lin Tan), verified\n- ORD-5503: Desk organiser, $45.00, 2 charges (duplicate confirmed)\n- Refund **RF-86138**: $45.00 cash, status \"issued\"\n- ORD-5501: $120.00 lamp, refund **not** processed (on hold at your request)\n- ORD-5504: Monitor arm, $60.00, shipped, ETA 2026-11-09 (passed, not yet delivered)\n\nYour duplicate charge refund of $45.00 for ORD-5503 has been issued to your original payment method (refund RF-86138).\n\nThe lamp refund ($120.00 for ORD-5501) is on hold. Let me know if you decide to keep or return it, and I'll process it then.\n\nWould you like me to escalate the late ORD-5504 monitor arm to a human agent to trace the shipment?",
+  "backend_state": {
+    "refunds": [
+      {
+        "refund_id": "RF-86138",
+        "order_id": "ORD-5503",
+        "amount": 45.0,
+        "reason": "Duplicate charge: order ORD-5503 was charged twice; refunding extra $45.00 charge.",
+        "status": "issued"
+      }
+    ],
+    "escalations": [],
+    "validated_refunds": {
+      "ORD-5503": {
+        "refund_total": 45.0,
+        "merchandise_credit": 0.0
+      }
+    },
+    "validation_log": [
+      {
+        "recommendation": {
+          "order_id": "ORD-5503",
+          "item_adjustments": [
+            {
+              "sku": "WHOLE",
+              "amount": 45
+            }
+          ],
+          "shipping_refund": 0,
+          "merchandise_credit": 0,
+          "refund_total": 45,
+          "rationale": "Duplicate charge: lookup_order shows 2 charges on a $45.00 order; refunding the extra $45.00 charge per policy. Customer approved this refund."
+        },
+        "errors": []
+      }
+    ]
+  }
+}

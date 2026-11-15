@@ -1,0 +1,52 @@
+# Set up and start the course simulators (instructions for Claude)
+
+A learner asked you to set up or start the Claude Certified Architect - Foundations (CCAR-F) Exam Prep simulators. Most learners are on **Windows** and have never used a terminal. Do every step yourself. The learner should only approve your commands and, once, paste their Anthropic API key. Report each step in one short line.
+
+Find the operating system first. On Windows you may be in PowerShell, not Bash: use PowerShell syntax there.
+
+## 1. Git (first time only)
+
+Run `git --version`. If Git is missing:
+
+- **Windows:** `winget install --id Git.Git -e --source winget --accept-package-agreements --accept-source-agreements`. Then refresh this shell's PATH:
+  `$env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User')`
+- **Mac:** run `xcode-select --install` and tell the learner to click **Install** in the dialog that appears. Wait until `git --version` works.
+
+If winget isn't available, download the repository as a ZIP instead (step 2) and tell the learner that Simulators 2 and 5 need Git for Windows later.
+
+## 2. Get the course (first time only)
+
+Skip this if `labs/start-labs.cmd` already exists here.
+
+The folder should be empty. Clone into it:
+
+```
+git clone https://github.com/tertiarycourses/C437-Claude-Certified-Architect-Foundations-Certification.git .
+```
+
+If the folder isn't empty, clone into a new subfolder called `ccar-f` and use that.
+
+No Git? Download https://github.com/tertiarycourses/C437-Claude-Certified-Architect-Foundations-Certification/archive/refs/heads/main.zip and unzip it here (PowerShell: `Invoke-WebRequest <url> -OutFile ccar-f.zip; Expand-Archive ccar-f.zip .`).
+
+## 3. Start the simulators: run the start script in its own window
+
+The start script does the rest. It installs uv if it's missing, installs the simulators (`uv sync`, about a minute the first time), asks once for the Anthropic API key and saves it to `labs/.env` (git-ignored), tests it with one tiny Claude Haiku 5.5 call, and opens the website. Launch it in a **separate window**, so it keeps running after this chat ends:
+
+- **Windows (PowerShell):** `Start-Process -FilePath "labs\start-labs.cmd" -WorkingDirectory "labs"`
+- **Mac:** `open -a Terminal labs/start-labs.command`
+
+Then tell the learner:
+
+1. A window titled *Claude Certified Architect simulators* opened. **Keep it open during class.** Closing it stops the simulators.
+2. The first time only, the window asks for their Anthropic API key (it starts `sk-ant-`; nothing shows while they paste). They can also paste it later into the **Anthropic API key** box in the website's sidebar, or double-click `set-api-key.cmd` (Windows) / `set-api-key.command` (Mac). Every lab runs on Claude Haiku 5.5 and costs a fraction of a US cent.
+3. The simulators open at http://localhost:8765 (or 8766, 8767 and so on if that port is busy). If the page is blank, wait 20 seconds and refresh.
+4. **Next time:** double-click `labs\start-labs.cmd` (Windows) or `labs/start-labs.command` (Mac). No Claude needed.
+
+## If something goes wrong
+
+- **The window says "Install failed":** read the error in it. Usually the network blocked the download. Retry step 3.
+- **"No API key yet" in the simulators' sidebar:** paste the key into the sidebar's **Anthropic API key** box and press **Save key**, or run `uv run login.py --set` in the `labs` folder. `uv run login.py` tests the saved key.
+- **The API refuses the key (401):** the key is wrong or revoked. Create a new one at https://platform.claude.com/settings/keys and save it again.
+- **"No claude program found"** (Windows on ARM laptops, such as Snapdragon): install Claude Code with `irm https://claude.ai/install.ps1 | iex`, then run step 3 again.
+- **Nothing opens in the browser:** look at the window for the line `Six simulators at http://localhost:PORT`, and open that address.
+- **The course is in OneDrive or Dropbox:** the script handles it already, by keeping the Python environment in `%LOCALAPPDATA%\ccar-f-labs-venv`.

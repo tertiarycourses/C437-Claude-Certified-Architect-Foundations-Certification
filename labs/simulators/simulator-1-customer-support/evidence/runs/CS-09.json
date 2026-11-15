@@ -1,0 +1,37 @@
+{
+  "case_id": "CS-09",
+  "title": "Ambiguous identity: two customers with the same name",
+  "message": "Hi, this is Sofia Alvarez. What is the status of my latest order?",
+  "customer": {
+    "name": "Sofia Alvarez"
+  },
+  "tool_calls": [],
+  "hooks": [],
+  "assistant_text": [
+    "CASE FACTS\n- Customer ID: not yet verified\n- Order IDs: none confirmed\n- Amounts, statuses, dates: none confirmed\n\nHi Sofia, I can check your latest order, but first I need to verify your identity. Please reply with the email address you used to place your Orderly account. Once I've confirmed it, I'll look up your order status and delivery details."
+  ],
+  "settings": {
+    "model": "claude-haiku-5-5",
+    "gate": true,
+    "limit_hook": true
+  },
+  "turn_replies": [
+    "CASE FACTS\n- Customer ID: not yet verified\n- Order IDs: none confirmed\n- Amounts, statuses, dates: none confirmed\n\nHi Sofia, I can check your latest order, but first I need to verify your identity. Please reply with the email address you used to place your Orderly account. Once I've confirmed it, I'll look up your order status and delivery details."
+  ],
+  "result": {
+    "subtype": "success",
+    "stop_reason": "end_turn",
+    "num_turns": 1,
+    "total_cost_usd": 0.00036640500000000004,
+    "session_id": "27f43f8c-d446-42f9-b5b5-175dbb13aae4",
+    "is_error": false,
+    "terminal_reason": "completed"
+  },
+  "reply": "CASE FACTS\n- Customer ID: not yet verified\n- Order IDs: none confirmed\n- Amounts, statuses, dates: none confirmed\n\nHi Sofia, I can check your latest order, but first I need to verify your identity. Please reply with the email address you used to place your Orderly account. Once I've confirmed it, I'll look up your order status and delivery details.",
+  "backend_state": {
+    "refunds": [],
+    "escalations": [],
+    "validated_refunds": {},
+    "validation_log": []
+  }
+}

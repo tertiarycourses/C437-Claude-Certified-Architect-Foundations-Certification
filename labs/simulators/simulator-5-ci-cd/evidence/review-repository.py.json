@@ -1,0 +1,15 @@
+{
+  "pass": "per-file",
+  "findings": [
+    {
+      "file": "stock/repository.py",
+      "line": 11,
+      "severity": "critical",
+      "category": "security",
+      "detected_pattern": "f-string SQL",
+      "issue": "The sku and warehouse arguments of fetch() are interpolated directly into the SQL string with an f-string, so a value containing a quote can change the query. fetch_many() passes its skus straight through to this path. Callers are outside this file, so reachability from request input is for the integration pass to confirm.",
+      "suggested_fix": "cursor.execute(\"SELECT qty FROM stock WHERE sku = %s AND warehouse = %s\", (sku, warehouse))  # use the placeholder style of the DB driver (%s for psycopg, ? for sqlite3)",
+      "confidence": 0.9
+    }
+  ]
+}

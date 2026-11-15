@@ -1,0 +1,141 @@
+{
+  "case_id": "CS-11",
+  "title": "Refund outside the return window: the tool says no (isError)",
+  "message": "I want to return the bookshelf from ORD-5508 and get my $140 back. It just does not look good in the room.",
+  "customer": {
+    "email": "sofia@example.com"
+  },
+  "tool_calls": [
+    {
+      "tool": "get_customer",
+      "input": {
+        "email": "sofia@example.com",
+        "name": "Sofia"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"customer_id\": \"C-1003\", \"name\": \"Sofia Alvarez\", \"email\": \"sofia@example.com\", \"tier\": \"standard\", \"created_at\": \"2026-07-01T00:00:00Z\", \"status\": \"shipped\"}"
+          }
+        ]
+      },
+      "is_error": false
+    },
+    {
+      "tool": "lookup_order",
+      "input": {
+        "order_id": "ORD-5508",
+        "customer_id": "C-1003"
+      },
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"order_id\": \"ORD-5508\", \"customer_id\": \"C-1003\", \"amount\": 140.0, \"item\": \"Bookshelf\", \"placed_at\": \"2026-08-05T00:00:00Z\", \"status\": \"delivered\", \"damage_photo\": false, \"charges\": 1, \"shipped\": true, \"eta\": \"2026-08-10\", \"return_window_open\": false}"
+          }
+        ]
+      },
+      "is_error": false
+    }
+  ],
+  "hooks": [
+    {
+      "event": "PreToolUse",
+      "tool": "get_customer",
+      "args": {
+        "email": "sofia@example.com",
+        "name": "Sofia"
+      },
+      "decision": "allow",
+      "reason": null
+    },
+    {
+      "event": "PostToolUse",
+      "tool": "get_customer",
+      "raw": {
+        "customer_id": "C-1003",
+        "name": "Sofia Alvarez",
+        "email": "sofia@example.com",
+        "tier": "standard",
+        "created_at": 1782864000,
+        "status": 2
+      },
+      "normalised": {
+        "customer_id": "C-1003",
+        "name": "Sofia Alvarez",
+        "email": "sofia@example.com",
+        "tier": "standard",
+        "created_at": "2026-07-01T00:00:00Z",
+        "status": "shipped"
+      }
+    },
+    {
+      "event": "PreToolUse",
+      "tool": "lookup_order",
+      "args": {
+        "order_id": "ORD-5508",
+        "customer_id": "C-1003"
+      },
+      "decision": "allow",
+      "reason": null
+    },
+    {
+      "event": "PostToolUse",
+      "tool": "lookup_order",
+      "raw": {
+        "order_id": "ORD-5508",
+        "customer_id": "C-1003",
+        "amount": 140.0,
+        "item": "Bookshelf",
+        "placed_at": 1785888000,
+        "status": "delivered",
+        "damage_photo": false,
+        "charges": 1,
+        "shipped": true,
+        "eta": "2026-08-10",
+        "return_window_open": false
+      },
+      "normalised": {
+        "order_id": "ORD-5508",
+        "customer_id": "C-1003",
+        "amount": 140.0,
+        "item": "Bookshelf",
+        "placed_at": "2026-08-05T00:00:00Z",
+        "status": "delivered",
+        "damage_photo": false,
+        "charges": 1,
+        "shipped": true,
+        "eta": "2026-08-10",
+        "return_window_open": false
+      }
+    }
+  ],
+  "assistant_text": [
+    "CASE FACTS\n- Customer: C-1003 (Sofia Alvarez, sofia@example.com)\n- Order: ORD-5508, Bookshelf, $140.00\n- Placed: 2026-08-05; delivered (ETA 2026-08-10)\n- Damage photo: none; charges: 1\n- Return window: closed\n\nHi Sofia, thank you for contacting us. I verified your account and looked up ORD-5508.\n\nUnfortunately I can't approve a refund for this bookshelf. Our returns are accepted within 30 days of purchase, and this order was placed on August 5, 2026, so the window closed in early September. Refunds for damaged items also require a damage photo, and none is on file for this order. Changing your mind about how the piece looks doesn't qualify under our policy.\n\nIf the bookshelf arrives damaged or doesn't match its listing, please send a photo and the order number, and we'll review it right away."
+  ],
+  "settings": {
+    "model": "claude-haiku-5-5",
+    "gate": true,
+    "limit_hook": true
+  },
+  "turn_replies": [
+    "CASE FACTS\n- Customer: C-1003 (Sofia Alvarez, sofia@example.com)\n- Order: ORD-5508, Bookshelf, $140.00\n- Placed: 2026-08-05; delivered (ETA 2026-08-10)\n- Damage photo: none; charges: 1\n- Return window: closed\n\nHi Sofia, thank you for contacting us. I verified your account and looked up ORD-5508.\n\nUnfortunately I can't approve a refund for this bookshelf. Our returns are accepted within 30 days of purchase, and this order was placed on August 5, 2026, so the window closed in early September. Refunds for damaged items also require a damage photo, and none is on file for this order. Changing your mind about how the piece looks doesn't qualify under our policy.\n\nIf the bookshelf arrives damaged or doesn't match its listing, please send a photo and the order number, and we'll review it right away."
+  ],
+  "result": {
+    "subtype": "success",
+    "stop_reason": "end_turn",
+    "num_turns": 3,
+    "total_cost_usd": 0.00083141,
+    "session_id": "3fd6829a-8b62-44bc-90ad-5bc6a72420dd",
+    "is_error": false,
+    "terminal_reason": "completed"
+  },
+  "reply": "CASE FACTS\n- Customer: C-1003 (Sofia Alvarez, sofia@example.com)\n- Order: ORD-5508, Bookshelf, $140.00\n- Placed: 2026-08-05; delivered (ETA 2026-08-10)\n- Damage photo: none; charges: 1\n- Return window: closed\n\nHi Sofia, thank you for contacting us. I verified your account and looked up ORD-5508.\n\nUnfortunately I can't approve a refund for this bookshelf. Our returns are accepted within 30 days of purchase, and this order was placed on August 5, 2026, so the window closed in early September. Refunds for damaged items also require a damage photo, and none is on file for this order. Changing your mind about how the piece looks doesn't qualify under our policy.\n\nIf the bookshelf arrives damaged or doesn't match its listing, please send a photo and the order number, and we'll review it right away.",
+  "backend_state": {
+    "refunds": [],
+    "escalations": [],
+    "validated_refunds": {},
+    "validation_log": []
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "id": "UC-8",
+  "question_n": 8,
+  "timestamp": "17:34",
+  "title": "Plan mode before replacing the homegrown authorization layer",
+  "type": "run",
+  "correct": "C",
+  "expected_outcome": "Claude researches src/middleware/authorize.js and its callers and returns a plan; the file-hash table shows zero edits.",
+  "model": "claude-haiku-5-5",
+  "tasks": {
+    "t1": {
+      "kind": "claude",
+      "elapsed_s": 31.3,
+      "exit_code": 0,
+      "command": "claude -p We are replacing the homegrown authorization layer (src/middleware/\u2026 --model claude-haiku-5-5 --output-format json --max-turns 12 --permission-mode plan --allowedTools Read Grep Glob",
+      "subtype": "success",
+      "result": "I researched the authorization layer and wrote the plan. I could not call ExitPlanMode because that tool isn't available in this session, so the plan is below for your approval. The same text is saved at `~/.claude/plans/we-are-replacing-the-tidy-grove.md`. I made no code changes.\n\n## Context\n\n`authorize(user, permission)` in `src/middleware/authorize.js` is a hard-coded role-list lookup. It is called in two places, both in `src/api/orders.js` (`getOrder` and `listOrders`, permission `orders:read`). Engineers disagree on where the policy decision should live.\n\n## What the research found\n\n- **Only `orders:read` is used.** `orders:refund` and `users:delete` are defined but no code calls them.\n- **It isn't real middleware.** It's a plain function called inside each handler. Nothing in the repo sets `req.user`, so the auth source is either outside this repo or missing.\n- **Ownership gap.** `orders:read` allows the `customer` role, but there's no ownership check. Any customer can read any order, and `listOrders` returns every order from the last 30 days. A policy engine has to express resource ownership, not just roles.\n- **No tests cover `authorize`.** `tests/` contains only `quantity.test.js`.\n- **Stale rules.** `.claude/rules/api-handlers.md` references `ApiError` and `src/api/schemas/` (zod), and neither exists.\n- **Test command.** `package.json` runs `node --test tests/`. CLAUDE.md asks for `npm test -- --changed`, which that runner doesn't support, so the test command needs checking before it's relied on.\n\n## Boundary options\n\n- **A. Handler-level.** Each handler calls `engine.can(req.user, action, resource)`. This is the smallest diff. The downside is that each handler repeats the check, and list filtering is easy to forget.\n- **B. Route middleware.** A `requires(\"orders:read\")` wrapper on each route keeps handlers free of auth and is easy to audit. It needs a router, which the repo doesn't have, and it can't express \"customers see only their own orders\" on its own.\n- **C. Data layer.** The repository takes an actor (`findById(id, actor)`, `findSince(date, actor)`), so row-level and list filtering live in one place. It's the most invasive option, since every caller changes.\n- **D. Hybrid (recommended).** Route middleware makes the coarse action check. The repository or service applies the resource-scoped rules and filters lists. Handlers stay thin, and both layers call one engine as the single source of policy.\n\nI recommend D. The ownership gap can't be fixed by a handler-level check alone, because `listOrders` needs the filter in its query anyway.\n\n## Proposed steps (for D)\n\n1. Add a policy engine module, e.g. `src/policy/`, with `can(actor, action, resource?)`. Load rules from one checked-in policy file, with no secrets in it.\n2. Port the three existing permissions to policy rules with identical outcomes. Keep `authorize.js` as a thin shim during migration, then remove it.\n3. Add `requires(action)` route middleware and apply it to `getOrder` and `listOrders`.\n4. Pass the actor into `OrderRepository` and scope `findById`/`findSince` for customers. This is a behaviour change: customers lose access to other customers' orders. Call it out in the PR body as a public-interface change.\n5. Migrate `orders:refund` and `users:delete` only if they gain callers. Today they have none.\n\n## Tests (per `docs/standards/testing.md`)\n\n- Write a regression test first for the ownership gap: a customer reading another customer's order gets 403. It must fail on the current code before the fix.\n- Add table-driven engine tests covering each role \u00d7 action, plus the failure paths: unknown action and null user (today `authorize(null, ...)` returns false).\n- Use `tests/fixtures/orders.json` for order data.\n- Name tests `it(\"<verb> <expected outcome> when <condition>\")`, with one `describe` per exported symbol.\n\n## Verification\n\n- `npm test` passes, including the new policy and regression tests.\n- The regression test fails on the current code before the change.\n- Call `getOrder` and `listOrders` as admin, support, a customer viewing their own order, and a customer viewing someone else's order. Check the status codes and filtered lists.\n\n## Decisions I need from you\n\n1. **Boundary:** A, B, C, or D (recommended)?\n2. **Engine:** build in-house, or adopt a library such as OPA, Cerbos, or casbin?\n3. **Ownership rule:** is \"customers see only their own orders\" intended? If yes, it ships as a behaviour change. If no, the policy should say so explicitly.\n4. **`req.user` source:** where does it come from? It isn't set anywhere in this repo.",
+      "session_id": "9a2812d7-85ec-4cbd-a51e-6bb25a964a1c",
+      "total_cost_usd": 0.0061706999999999994,
+      "num_turns": 6,
+      "structured_output": null,
+      "permission_denials": [],
+      "is_error": false,
+      "files_changed": []
+    }
+  },
+  "restores": [],
+  "cost_usd": 0.0062,
+  "evaluation": [
+    {
+      "criterion": "plan mode edited no files",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "criterion": "the output is a plan that names the authorization boundary",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "criterion": "the plan references the real callers found by research",
+      "pass": true,
+      "note": ""
+    }
+  ]
+}

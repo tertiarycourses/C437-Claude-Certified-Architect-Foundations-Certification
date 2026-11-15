@@ -1,6 +1,34 @@
-source-wsq/
-source-wsq-courseware/
 .DS_Store
+/.env
+**/.env
+!**/.env.example
+/.claude/
+/.codex/
 **/__pycache__/
 **/*.pyc
-**/evidence/
+
+# Not part of a non-WSQ course, and never public
+/assessment/
+/reference/
+/qa/
+**/FG_*
+**/FG-*
+**/Assessment_Plan_*
+**/AP-*
+**/Answer to *
+**/Assessment Summary Record*
+
+# Superseded or generated
+/courseware/archive/
+/Archive/
+**/.venv/
+**/.pristine-evidence/
+**/my_cases/
+**/work/
+**/node_modules/
+
+# Distribution archives (rebuildable)
+*.zip
+
+# Source material the course was derived from, at any depth
+**/reference/
