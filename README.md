@@ -21,17 +21,17 @@ Prepare for Anthropic's CCAR-F exam task statement by task statement: answer eac
 |---|---|
 | Exam code | CCAR-F |
 | Questions and time | 60 questions in 120 minutes |
-| Format | Multiple choice: one correct answer and three plausible wrong ones. Every question must be answered |
+| Format | Multiple-choice and multiple-response questions; each question states how many answers to select |
 | Delivery and fee | Proctored, online or at a test centre; $125 USD per attempt |
 | Scenarios | Four of the six official scenarios, drawn at random, so prepare all six |
 | Domains | Five, weighted 27%, 18%, 20%, 20% and 15% |
-| Pass mark | 720 on a scale of 100 to 1,000, against a fixed standard |
+| Pass mark | 720 on a scale of 100 to 1,000, against a fixed standard; the score report also shows percent-correct by domain |
 | Retakes | Wait 14 days after a first fail, 30 after a second and 90 after a third; at most four attempts in a rolling 12 months, each at the full fee |
 | Validity | 12 months; renewing on time is free, through a non-proctored assessment |
 
 These figures are from Anthropic's **[Exam Guide v1.0](exam-guide/Claude-Certified-Architect-Foundations-Exam-Guide-v1.0.pdf)** (effective July 2026), which is in this repository. Read it first: it lists the six scenarios, all 30 task statements with the knowledge and skills behind each, 12 sample questions with explanations, four preparation exercises, and the in-scope and out-of-scope topics. The guide can change without notice, so check Anthropic's current version before you book.
 
-The exam tests judgement more than recall. Most questions describe a system that is failing and offer four fixes that all sound reasonable; the distractors are usually a stronger prompt where the rule belongs in code, or a stricter schema where the meaning needs checking. Many questions sit on the seams between domains. Domain 5 carries only 15% of the score but appears in Scenarios 1, 2, 3 and 6, so at least two of your four scenarios will lean on it.
+The exam tests judgement more than recall. Most questions describe a system that is failing and offer several fixes that all sound reasonable; the distractors are usually a stronger prompt where the rule belongs in code, or a stricter schema where the meaning needs checking. Many questions sit on the seams between domains. Domain 5 carries only 15% of the score but appears in Scenarios 1, 2, 3 and 6, so at least two of your four scenarios will lean on it.
 
 ## How the course prepares you
 
