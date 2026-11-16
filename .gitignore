@@ -7,6 +7,10 @@
 **/__pycache__/
 **/*.pyc
 
+# Local only: internal course notes and Office lock files
+/CLAUDE.md
+**/~$*
+
 # Not part of a non-WSQ course, and never public
 /assessment/
 /reference/
