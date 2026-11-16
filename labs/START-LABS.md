@@ -1,6 +1,6 @@
 # Set up and start the course simulators (instructions for Claude)
 
-A learner asked you to set up or start the Claude Certified Architect - Foundations (CCAR-F) Exam Prep simulators. Most learners are on **Windows** and have never used a terminal. Do every step yourself. The learner should only approve your commands and, once, paste their Anthropic API key. Report each step in one short line.
+A learner asked you to set up or start the Claude Certified Architect - Foundations (CCAR-F) simulators. Most learners are on **Windows** and have never used a terminal. Do every step yourself. The learner should only approve your commands and, once, paste their Anthropic API key. Report each step in one short line.
 
 Find the operating system first. On Windows you may be in PowerShell, not Bash: use PowerShell syntax there.
 

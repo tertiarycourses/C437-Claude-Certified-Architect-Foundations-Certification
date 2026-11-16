@@ -3,7 +3,7 @@ description: Run one course lab on its simulator. You answer first, then the sim
 argument-hint: <lab number, 1 to 30>
 allowed-tools: Bash(uv run *), Read, Grep, Glob
 ---
-Run lab $ARGUMENTS of the Claude Certified Architect - Foundations (CCAR-F) Exam Prep course with the learner, from the `labs` folder.
+Run lab $ARGUMENTS of the Claude Certified Architect - Foundations (CCAR-F) course with the learner, from the `labs` folder.
 
 1. Run `uv run run_lab.py $ARGUMENTS --question` and show the learner the situation and options. Do not read `labs.json` and do not run `--answer` yet.
 2. Ask which option they pick and why. Stop and wait for their reply. Do not run anything until they answer.

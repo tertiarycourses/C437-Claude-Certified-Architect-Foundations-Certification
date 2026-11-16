@@ -61,7 +61,7 @@ function sidebar(D, here) {
     ls.map((l) => `<a class="task ${here === l.id ? "on" : ""}" href="lab.html?n=${l.id}" title="${esc(l.task_title)}"><b>${l.task}</b> · Lab ${l.id}</a>`).join("")).join("");
   $("aside").innerHTML = `
     <div class="brand">C437 · Simulators</div>
-    <div class="course">Claude Certified Architect - Foundations (CCAR-F) Exam Prep</div>
+    <div class="course">Claude Certified Architect - Foundations (CCAR-F)</div>
     <div class="keybox">
       <div>Anthropic API key: <span class="keystate"></span></div>
       <div class="keyrow"><input type="password" id="key" placeholder="sk-ant-..." autocomplete="off" spellcheck="false"><button id="show" class="eye" type="button" title="Show the key" aria-label="Show the key">${EYE}</button></div>
@@ -99,7 +99,7 @@ export async function home() {
   const D = await data(); sidebar(D, 0);
   const byTopic = {}; for (const l of D.labs) (byTopic[l.topic] ||= []).push(l);
   $("main").innerHTML = `
-    <div class="kicker">C437 · Claude Certified Architect - Foundations (CCAR-F) Exam Prep</div>
+    <div class="kicker">C437 · Claude Certified Architect - Foundations (CCAR-F)</div>
     <h1>Five domains, 30 task statements, 30 live labs</h1>
     <p>Day 1 follows the exam guide: each topic is one exam domain, and each task statement has one lab. Every lab runs the same way: read the <b>task statement</b>, answer an <b>exam-style question</b>, press <b>Simulate it live</b> and watch the code run, read <b>Claude's final output</b>, then the <b>observation explained</b>, turn by turn. The customers, orders and repositories are simulated. Claude is real: Claude Haiku 5.5 on your own API key, called from this page.</p>
     ${getKey() ? "" : `<div class="fb no"><b>No API key yet.</b> Paste your Anthropic API key into the box on the left and press <b>Save key</b>. It stays in this browser.</div>`}

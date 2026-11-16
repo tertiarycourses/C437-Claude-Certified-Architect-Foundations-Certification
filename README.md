@@ -1,4 +1,4 @@
-# Claude Certified Architect - Foundations (CCAR-F) Exam Prep
+# Claude Certified Architect - Foundations (CCAR-F)
 
 Prepare for Anthropic's CCAR-F exam task statement by task statement: answer each of the 30 as an exam-style question, then watch Claude run the scenario live.
 
@@ -7,13 +7,13 @@ Prepare for Anthropic's CCAR-F exam task statement by task statement: answer eac
 | Course code | `C437` |
 | Programme | Non-WSQ |
 | Duration | 2 days / 15 hours (9:30am – 5:30pm daily) |
-| Courseware release | Trainer slides v3.0, Lesson Plan v2.0, Learner Guide v2.0 (16 Nov 2026) |
+| Courseware release | Trainer slides v3.1, Lesson Plan v2.1, Learner Guide v2.1 (16 Nov 2026) |
 | Official exam guide | [Anthropic's CCAR-F Exam Guide v1.0 (PDF, 39 pages)](exam-guide/Claude-Certified-Architect-Foundations-Exam-Guide-v1.0.pdf) |
 | Exam-question labs | [Run all 30 labs live in your browser](https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/) |
 | Practice exam | [60 questions, scored by domain](https://exams.tertiaryinfotech.com/practice-exams/anthropic/anthropic-cca-foundations) |
 | Registration | [View course details and register](https://www.tertiarycourses.com.sg/claude-certified-architect-foundations-ccar-f-exam-prep.html) |
 
-![Cover slide of the C437 trainer slides v3.0](screenshot.png)
+![Cover slide of the C437 trainer slides v3.1](screenshot.png)
 
 ## The exam at a glance
 
@@ -190,9 +190,9 @@ Optional builds in curl, the Python SDK and Claude Code, for task statements you
 ## In this repository
 
 - [Anthropic's CCAR-F Exam Guide v1.0, PDF](exam-guide/Claude-Certified-Architect-Foundations-Exam-Guide-v1.0.pdf)
-- [Trainer slides, PowerPoint](courseware/C437-Claude-Certified-Architect-Foundations-CCAR-F-Exam-Prep-Trainer-Slides-v3.0.pptx) and [PDF](courseware/C437-Claude-Certified-Architect-Foundations-CCAR-F-Exam-Prep-Trainer-Slides-v3.0.pdf)
-- [Lesson Plan, Word](courseware/LP-Claude-Certified-Architect-Foundations-CCAR-F-Exam-Prep-v2.0.docx) and [PDF](courseware/LP-Claude-Certified-Architect-Foundations-CCAR-F-Exam-Prep-v2.0.pdf)
-- [Learner Guide, Word](courseware/LG-Claude-Certified-Architect-Foundations-CCAR-F-Exam-Prep-v2.0.docx), [PDF](courseware/LG-Claude-Certified-Architect-Foundations-CCAR-F-Exam-Prep-v2.0.pdf) and [Markdown](courseware/LG-Claude-Certified-Architect-Foundations-CCAR-F-Exam-Prep-v2.0.md)
+- [Trainer slides, PowerPoint](courseware/C437-Claude-Certified-Architect-Foundations-CCAR-F-Trainer-Slides-v3.1.pptx) and [PDF](courseware/C437-Claude-Certified-Architect-Foundations-CCAR-F-Trainer-Slides-v3.1.pdf)
+- [Lesson Plan, Word](courseware/LP-Claude-Certified-Architect-Foundations-CCAR-F-v2.1.docx) and [PDF](courseware/LP-Claude-Certified-Architect-Foundations-CCAR-F-v2.1.pdf)
+- [Learner Guide, Word](courseware/LG-Claude-Certified-Architect-Foundations-CCAR-F-v2.1.docx), [PDF](courseware/LG-Claude-Certified-Architect-Foundations-CCAR-F-v2.1.pdf) and [Markdown](courseware/LG-Claude-Certified-Architect-Foundations-CCAR-F-v2.1.md)
 - [The labs folder](labs/): 46 lab folders (30 Day 1, 5 Day 2, 11 optional code builds) and the six Python simulators
 - [`docs/`](docs/): the source of the [lab site](https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/) (GitHub Pages)
 
