@@ -10,6 +10,7 @@
 # Local only: internal course notes and Office lock files
 /CLAUDE.md
 **/~$*
+/.playwright-mcp/
 
 # Not part of a non-WSQ course, and never public
 /assessment/
