@@ -1,5 +1,6 @@
-"""The coordinator of a multi-agent research team (Scenario 3). It plans, delegates to subagents, and runs every
-delegation from one turn IN PARALLEL. Run:  uv run research.py "Impact of AI on creative industries" [--plan "a; b; c"]"""
+"""The coordinator of a multi-agent research team (Scenario 3). It plans, delegates to four subagents, and runs every
+delegation from one turn IN PARALLEL. Run:  uv run research.py "Impact of AI on creative industries" [--narrow]
+--narrow replays version 1 of the coordinator: the narrow decomposition from the exam question."""
 import json
 import sys
 import time
@@ -13,20 +14,25 @@ from research_tools import DATA, sector_of
 
 load_dotenv()
 MAX_TURNS = 8
-SYSTEM = """You are the coordinator of a research team. You never search or read documents yourself: you delegate.
-1. Decompose the topic into the distinct sectors it spans. For creative industries, cover at least music, writing,
-   film and visual arts. Breadth first: a narrow plan makes a narrow report.
-2. In ONE turn, delegate one "search" task per sector (they run in parallel), plus one "documents" task that names
+# Rule 1 is the coordinator's task decomposition. RULE_1_NARROW is the plan logged in the exam question (version 1);
+# RULE_1 is the fix. The fix is one rule in the coordinator's system prompt: no subagent changes.
+RULE_1_NARROW = "1. Decompose the topic into three search subtasks: AI in digital art creation; AI in graphic design; AI in photography."
+RULE_1 = """1. Decompose the topic into the distinct sectors it spans before you split it. For creative industries, cover at
+   least music, writing, film and visual arts: one search subtask per sector. Breadth first: a narrow plan makes a narrow report."""
+SYSTEM = """You are the coordinator of a research team. You never search, read documents or write the report yourself: you delegate.
+{rule_1}
+2. In ONE turn, delegate one "search" task per subtask (they run in parallel), plus one "documents" task that names
    both internal documents: Halden-Rao-2026-Journal-of-Creative-Economies.pdf and BrightCanvas-Customer-Benchmark-2026.pdf.
 3. Subagents see nothing but their task text. Put everything a subagent needs in its task.
 4. When the results are back, delegate ONE "synthesis" task. Paste into it every finding with its exact source and
    every gap the subagents reported.
-5. Then reply with a two-sentence summary for the user."""
-RULE_1 = SYSTEM.split("\n2.")[0].split("\n", 1)[1]        # rule 1, the decomposition rule
+5. When the synthesis is back, delegate ONE "report" task. Paste the synthesis JSON into it, unchanged.
+6. Then reply with a two-sentence summary for the user."""
 DELEGATE = {
     "name": "delegate",
     "description": "Give one task to a subagent and get its result back. agent: 'search' (web search on one sector), "
-                   "'documents' (reads the internal PDFs), 'synthesis' (writes the final report from the findings you paste in). "
+                   "'documents' (reads the internal PDFs), 'synthesis' (combines the findings you paste in), "
+                   "'report' (writes the final cited report from the synthesis you paste in). "
                    "The subagent sees ONLY the task text, never this conversation.",
     "input_schema": {"type": "object", "properties": {
         "agent": {"type": "string", "enum": list(AGENTS)},
@@ -62,11 +68,10 @@ def check_provenance(report):
     return report
 
 
-def run_research(topic, plan=None):
+def run_research(topic, narrow=False):
+    """narrow=True runs version 1 of the coordinator: the exam question's decomposition."""
     client = anthropic.Anthropic()
-    system = SYSTEM
-    if plan:   # replay a fixed decomposition, e.g. the narrow one from the exam question
-        system = SYSTEM.replace(RULE_1, f"1. Follow exactly this research plan, one search task per subtask and nothing else: {plan}")
+    system = SYSTEM.format(rule_1=RULE_1_NARROW if narrow else RULE_1)
     messages = [{"role": "user", "content": f"Research topic: {topic}"}]
     delegations, summary = [], ""
     for turn in range(1, MAX_TURNS + 1):
@@ -90,8 +95,8 @@ def run_research(topic, plan=None):
             results.append({"type": "tool_result", "tool_use_id": block.id, "content": out["text"]})
         print(f"  ({len(uses)} subagent(s) in {time.time() - t0:.0f}s)")
         messages.append({"role": "user", "content": results})
-    synth = [d for d in delegations if d["agent"] == "synthesis"]
-    report = check_provenance(synth[-1]["json"] if synth and synth[-1]["json"] else {})
+    final = [d for d in delegations if d["agent"] == "report"]
+    report = check_provenance(final[-1]["json"] if final and final[-1]["json"] else {})
     searched, missing = coverage(delegations)
     return {"topic": topic, "summary": summary, "report": report, "delegations": delegations,
             "searched": searched, "missing": missing}
@@ -107,9 +112,10 @@ def to_markdown(r):
 
 if __name__ == "__main__":
     args = sys.argv[1:]
-    plan = args[args.index("--plan") + 1] if "--plan" in args else None
-    topic = next((a for a in args if a != "--plan" and a != plan), "Impact of AI on creative industries")
-    r = run_research(topic, plan)
+    narrow = "--narrow" in args
+    topic = next((a for a in args if a != "--narrow"), "Impact of AI on creative industries")
+    print("Coordinator rule 1:", RULE_1_NARROW if narrow else RULE_1)
+    r = run_research(topic, narrow)
     with open("report.json", "w") as f:
         json.dump(r["report"], f, indent=2)
     with open("report.md", "w") as f:

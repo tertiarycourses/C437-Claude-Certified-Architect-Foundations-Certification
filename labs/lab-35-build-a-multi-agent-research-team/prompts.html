@@ -24,43 +24,49 @@ pre.plain{background:#fff;border:1px solid var(--line);border-radius:8px;white-s
 .powered-by{text-align:center;color:var(--grey);font-size:13px;padding:18px 16px 28px;border-top:1px solid var(--line)}
 .copy:hover{background:#24585a} .copy:focus-visible{outline:3px solid var(--orange);outline-offset:2px} .copy.done{background:var(--orange)}
 </style></head><body>
-<nav aria-label="Lab sections"><a class="home" href="https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/">All labs</a><a href="https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/lab-31.html">Lab 31</a><a href="https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/lab-32.html">Lab 32</a><a href="https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/lab-33.html">Lab 33</a><a href="https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/lab-34.html">Lab 34</a><a href="https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/lab-35.html" aria-current=page>Lab 35</a><span>|</span><a href="#before-you-start-5-minutes">Before you start</a><a href="#step-1-set-up-the-project-5-minutes">Step 1</a><a href="#step-2-write-the-two-tools-10-minutes">Step 2</a><a href="#step-3-write-the-three-subagents-15-minutes">Step 3</a><a href="#step-4-write-the-coordinator-15-minutes">Step 4</a><a href="#step-5-replay-the-exam-question-s-plan-5-minutes-no-code-change">Step 5</a><a href="#step-6-prove-it-with-live-tests-10-minutes">Step 6</a><a href="#stretch-the-same-team-in-the-claude-agent-sdk">Stretch</a><a href="#troubleshooting">Troubleshooting</a></nav>
+<nav aria-label="Lab sections"><a class="home" href="https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/">All labs</a><a href="https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/lab-31.html">Lab 31</a><a href="https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/lab-32.html">Lab 32</a><a href="https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/lab-33.html">Lab 33</a><a href="https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/lab-34.html">Lab 34</a><a href="https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/lab-35.html" aria-current=page>Lab 35</a><span>|</span><a href="#before-you-start-5-minutes">Before you start</a><a href="#step-1-set-up-the-project-5-minutes">Step 1</a><a href="#step-2-write-the-two-tools-10-minutes">Step 2</a><a href="#step-3-write-the-four-subagents-10-minutes">Step 3</a><a href="#step-4-write-the-coordinator-version-1-the-exam-question-s-plan-10-minutes">Step 4</a><a href="#step-5-explain-the-fix-5-minutes-no-code">Step 5</a><a href="#step-6-apply-the-fix-to-the-task-decomposition-5-minutes">Step 6</a><a href="#step-7-prove-it-with-live-tests-10-minutes">Step 7</a><a href="#stretch-the-same-team-in-the-claude-agent-sdk">Stretch</a><a href="#troubleshooting">Troubleshooting</a></nav>
 <main>
 <div class="links"><a href="README.pdf">Lab PDF</a><a href="solution/">Reference solution</a><a href="sample-output.txt">Sample output</a><a href="starter/sources.json">sources.json</a></div>
 <h1>Lab 35: Vibe-code a multi-agent research team</h1>
 <p class="note">Day 2 · Bonus Topic B · Scenario 3: Multi-Agent Research System · Task statements 1.2, 1.3, 5.3 · Vibe-coding lab · Claude Haiku 5.5 · 60 minutes</p>
-<p><strong>Be the manager of your own AI research department. In 60 minutes you vibe-code a coordinator that splits "Impact of AI on creative industries" into sectors, sends a search agent to every sector at once (four or more), has another read the internal PDFs, and hands everything to a writer agent that cites every number. Then you feed it the narrow plan from the exam question and watch every agent succeed while the report misses three sectors.</strong></p>
+<p><strong>Build exam Scenario 3 yourself. A coordinator delegates to four subagents: one searches the web, one analyzes documents, one synthesizes the findings and one generates the cited report. First you run it with the coordinator's plan from the exam question: every agent succeeds, yet the report covers only visual arts. Then you find the cause, fix one rule in the coordinator's system prompt, and watch the report cover music, writing, film and visual arts.</strong></p>
 <h2 id="day-2-two-bonus-topics">Day 2: two bonus topics</h2>
-<div class="tw"><table><tr><th>Lab</th><th>You build</th><th>Exam tasks</th></tr><tr><td>31–34</td><td><strong>Bonus Topic A:</strong> one customer resolution agent, then its MCP server and its two hooks</td><td>1.1, 1.4, 1.5, 2.1, 2.2, 2.4</td></tr><tr><td><strong>35 (this lab)</strong></td><td><strong>Bonus Topic B:</strong> a coordinator and three kinds of subagent, run in parallel, with a live test</td><td>1.2, 1.3, 5.3</td></tr></table></div>
+<div class="tw"><table><tr><th>Lab</th><th>You build</th><th>Exam tasks</th></tr><tr><td>31–34</td><td><strong>Bonus Topic A:</strong> one customer resolution agent, then its MCP server and its two hooks</td><td>1.1, 1.4, 1.5, 2.1, 2.2, 2.4</td></tr><tr><td><strong>35 (this lab)</strong></td><td><strong>Bonus Topic B:</strong> Scenario 3's coordinator and its four subagents: reproduce the exam's narrow decomposition, then fix it</td><td>1.2, 1.3, 5.3</td></tr></table></div>
 <p>This is a <strong>new project</strong>, not the Orderly agent. Make a fresh folder for it.</p>
+<h2 id="the-exam-scenario">The exam scenario</h2>
+<p class="note">You are building a multi-agent research system using the Claude Agent SDK. A coordinator agent delegates to specialized subagents: one searches the web, one analyzes documents, one synthesizes findings, and one generates reports. The system researches topics and produces comprehensive, cited reports.</p>
+<p>The scenario's first exam question: after a run on "impact of AI on creative industries", every subagent completes successfully, but the final report covers only visual arts. Music, writing and film are missing. The coordinator's logs show it split the topic into three subtasks: "AI in digital art creation", "AI in graphic design" and "AI in photography". What is the most likely root cause? You answered it on Day 1 (Lab 2). Today you reproduce it, then fix it.</p>
 <h2 id="what-you-ll-build">What you'll build</h2>
 <pre class="plain">  &quot;Impact of AI on creative industries&quot;
         |
         v
-  research.py -- the coordinator (claude-haiku-5-5). It never searches: it delegates.
+  research.py -- the coordinator (claude-haiku-5-5). It never searches,
+        |        reads or writes the report itself: it delegates.
+        |        Its system prompt&#x27;s rule 1 decides the subtasks.
         |
-        |  one turn, run in parallel:
-        +--&gt; search agent: music          --+
-        +--&gt; search agent: writing          |   one per sector, four or more
-        +--&gt; search agent: film (times out) |   (the coordinator may add more);
-        +--&gt; search agent: visual arts      |   each one: a fresh conversation,
-        +--&gt; ...                            |   only its own tool, only its task
-        +--&gt; documents agent: 2 PDFs      --+
-        |
-        |  next turn:
-        +--&gt; synthesis agent: every finding + source + gap pasted into its task
+        |  turn 1, run in parallel:
+        +--&gt; 1. web search agent: one per subtask   --+  each one: a fresh
+        +--&gt; 2. document analysis agent: 2 PDFs     --+  conversation, only its
+        |                                                own tool, only its task
+        |  turn 2:
+        +--&gt; 3. synthesis agent: every finding + source + gap pasted in
+        |  turn 3:
+        +--&gt; 4. report generation agent: the synthesis pasted in
         |
         v
-  report.json + report.md (every claim cited), and a coverage check in code</pre>
-<p>On Day 1 you watched these failures in Lab 2 (a narrow plan), Lab 3 (searches that ran one by one), Lab 27 (a timeout hidden as success) and Lab 30 (a vendor number treated like a peer-reviewed one). Today you build the system that avoids all four.</p>
+  report.json + report.md (every claim cited) and a coverage check in code
+
+  Version 1, rule 1 = the exam question&#x27;s plan:  digital art; graphic design; photography
+  Version 2, rule 1 = the fix:                   every sector: music, writing, film, visual arts</pre>
+<p>On Day 1 you watched these failures in Lab 2 (a narrow plan), Lab 3 (searches that ran one by one), Lab 27 (a timeout hidden as success) and Lab 30 (a vendor number treated like a peer-reviewed one). Today you build the system, reproduce the first one and fix it, and avoid the other three.</p>
 <h2 id="what-s-in-this-folder">What's in this folder</h2>
-<div class="tw"><table><tr><th>File</th><th>What it is</th></tr><tr><td><code>starter/sources.json</code></td><td>the research sandbox: web results for four sectors (film always times out) and two internal PDFs. Every name, number and URL is invented. Prompt 1 downloads it into your project.</td></tr><tr><td><code>starter/.env.example</code></td><td>the one line your <code>.env</code> needs</td></tr><tr><td><code>prompts.html</code></td><td>every prompt below, each with a Copy button</td></tr><tr><td><code>solution/</code></td><td>our finished code, for your trainer. You don't need it: build your own with the prompts.</td></tr><tr><td><code>sample-output.txt</code></td><td>a live run of <code>solution/research.py</code> and then <code>test_research.py</code> with 8/8 checks</td></tr></table></div>
+<div class="tw"><table><tr><th>File</th><th>What it is</th></tr><tr><td><code>starter/sources.json</code></td><td>the research sandbox: web results for four sectors (film always times out) and two internal PDFs. Every name, number and URL is invented. Prompt 1 downloads it into your project.</td></tr><tr><td><code>starter/.env.example</code></td><td>the one line your <code>.env</code> needs</td></tr><tr><td><code>prompts.html</code></td><td>every prompt below, each with a Copy button</td></tr><tr><td><code>solution/</code></td><td>our finished code (after the fix), for your trainer. You don't need it: build your own with the prompts.</td></tr><tr><td><code>sample-output.txt</code></td><td>a live run of <code>solution/</code>: before the fix, after the fix, then <code>test_research.py</code> with 10/10 checks</td></tr></table></div>
 <h2 id="before-you-start-5-minutes">Before you start (5 minutes)</h2>
 <ul><li><strong>1. Open your AI coding tool in a new, empty folder</strong> called <code>research-team</code> (a new folder, not <code>orderly-agent</code>). In VS Code, Cursor, Windsurf or Antigravity: <strong>File → Open Folder → New Folder</strong>. Claude Code or Codex in a terminal: start it from that folder. Any agent that can create files and run terminal commands works; the prompts use no tool-specific feature.</li><li><strong>2. Have your Anthropic API key ready.</strong> It starts with <code>sk-ant-</code>. You'll paste it into a file in Step 1, never into the chat.</li></ul>
 <p>That's all. <strong>Prompt 1 does the rest of the set-up:</strong> it installs uv (the Python tool) if your computer doesn't have it, downloads the lab's data file and creates the project.</p>
-<p>One full research run makes about eight Claude calls with <code>claude-haiku-5-5</code>: a few US cents at most.</p>
+<p>One full research run makes about nine Claude calls with <code>claude-haiku-5-5</code>: a few US cents at most.</p>
 <p><strong>You run the code yourself.</strong> A prompt writes the code; the command under <strong>Run it in your terminal</strong> runs it, with its own Copy button. Open a terminal in your project folder: in VS Code, Cursor, Windsurf or Antigravity, <strong>Terminal → New Terminal</strong>; in Claude Code you can also type <code>!</code> and then the command. If the output doesn't match the Checkpoint, paste it back into the chat.</p>
-<p><strong>Tested on 17 Nov 2026</strong>, after the run commands moved out of the prompts. We pasted these exact five prompts, in one conversation, into Claude Code 2.1.325, four runs. All 4 builds passed <code>test_research.py</code> 8/8 on a fresh run, and every <code>check_tools.py</code> printed the Checkpoint's results. Codex was not re-run on this version (its sign-in had expired); the previous version of these prompts passed in 4 of 4 Codex 0.167.0 runs on 14 Nov 2026. Not a benchmark: your tool, model and wording will differ. Antigravity has no headless mode, so we couldn't machine-test it; the prompts use no tool-specific features.</p>
+<p><strong>Tested on 26 Nov 2026.</strong> We pasted these exact six prompts, in one conversation, into Claude Code 2.1.331 (four runs) and Codex 0.171.0 (four runs), then ran <code>uv run test_research.py</code> once on each build. Claude Code: 4 of 4 builds passed 10/10. Codex: 3 of 4 passed 10/10; in the fourth, run 1 (before the fix) searched a sector outside visual arts once, so check 2 failed, and that build's narrow run showed <code>never searched: film, music, writing</code> on both re-runs. Our <code>solution/</code> passed 10/10 in 3 of 3 runs. Not a benchmark: your tool, model and wording will differ. Antigravity has no headless mode, so we couldn't machine-test it; the prompts use no tool-specific features.</p>
 <h2 id="step-1-set-up-the-project-5-minutes">Step 1 · Set up the project (5 minutes)</h2>
 <h3>Prompt 1</h3>
 <div class="prompt"><div class="bar"><span>Paste into your AI coding tool's chat</span><button type="button" class="copy" data-for="p1">Copy prompt</button></div><pre id="p1">Set up this folder as a new Python project for a multi-agent research team. Do each step, then tell me what you did.
@@ -111,9 +117,10 @@ Then show me the file tree, and tell me to open .env in the editor and replace p
 <p><strong>Run it in your terminal</strong>, in your project folder:</p>
 <div class="prompt cmd"><div class="bar"><span>Terminal</span><button type="button" class="copy" data-for="c1">Copy command</button></div><pre id="c1">uv run check_tools.py</pre></div>
 <p class="check"><strong>Checkpoint.</strong> Music returns two results. Film returns <code>is_error True</code> with <code>errorCategory: timeout</code> <strong>and</strong> one <code>partial_results</code> hit: a failure that still tells you what it found (Day 1, Lab 27). Graphic design maps to <code>visual_arts</code>.</p>
-<h2 id="step-3-write-the-three-subagents-15-minutes">Step 3 · Write the three subagents (15 minutes)</h2>
+<h2 id="step-3-write-the-four-subagents-10-minutes">Step 3 · Write the four subagents (10 minutes)</h2>
 <h3>Prompt 3</h3>
-<div class="prompt"><div class="bar"><span>Paste into your AI coding tool's chat</span><button type="button" class="copy" data-for="p3">Copy prompt</button></div><pre id="p3">Create agents.py with three subagents and one function that runs any of them. Follow AGENTS.md.
+<div class="prompt"><div class="bar"><span>Paste into your AI coding tool's chat</span><button type="button" class="copy" data-for="p3">Copy prompt</button></div><pre id="p3">Create agents.py with the four subagents of the exam&#x27;s Scenario 3 (web search, document analysis, synthesis, report
+generation) and one function that runs any of them. Follow AGENTS.md.
 
 - AGENTS is a dict: agent name -&gt; {&quot;tools&quot;: [tool names], &quot;system&quot;: its system prompt}. Use these exactly:
   &quot;search&quot;, tools [&quot;search_web&quot;], system:
@@ -128,11 +135,19 @@ Then show me the file tree, and tell me to open .env in the editor and replace p
     Say which findings are peer-reviewed and which come from a vendor. &quot;gaps&quot; lists only documents you could not read.
     Never invent a source.&quot;
   &quot;synthesis&quot;, no tools, system:
-    &quot;You are a synthesis subagent. Write a short research report using ONLY the findings in your task.
-    Return ONLY a JSON object: {&quot;title&quot;: str, &quot;summary&quot;: str, &quot;findings&quot;: [{&quot;sector&quot;: str, &quot;claim&quot;: str, &quot;source&quot;: str}], &quot;gaps&quot;: [str]}.
-    Summary under 80 words. One finding per source, and every finding keeps its source (url or document reference) exactly
-    as given: never a finding without a source. &quot;gaps&quot; lists, one line each, the failed searches, the searches that found
-    nothing and the unreadable documents you were told about.&quot;
+    &quot;You are a synthesis subagent. Combine the findings in your task into one evidence set, using ONLY those findings.
+    Return ONLY a JSON object: {&quot;findings&quot;: [{&quot;sector&quot;: str, &quot;claim&quot;: str, &quot;source&quot;: str, &quot;evidence&quot;: str}], &quot;conflicts&quot;: [str], &quot;gaps&quot;: [str]}.
+    Group the findings by sector. &quot;source&quot; is ONLY the url or &quot;&lt;file name&gt;, p.&lt;page&gt;&quot;, copied exactly: never a finding without one.
+    &quot;evidence&quot; says what kind of source it is (survey, poll, peer-reviewed article, vendor benchmark). &quot;conflicts&quot; names
+    figures that disagree or measure different things. &quot;gaps&quot; lists, one short line each, the failed searches, the searches
+    that found nothing and the unreadable documents you were told about.&quot;
+  &quot;report&quot;, no tools, system:
+    &quot;You are a report-generation subagent. Write the final research report from the synthesized findings in your
+    task, using ONLY those findings. Return ONLY a JSON object:
+    {&quot;title&quot;: str, &quot;summary&quot;: str, &quot;findings&quot;: [{&quot;sector&quot;: str, &quot;claim&quot;: str, &quot;source&quot;: str}], &quot;gaps&quot;: [str]}.
+    Summary under 80 words. One finding per source: &quot;claim&quot; is one sentence with its number and evidence type, and &quot;source&quot;
+    is ONLY the url or &quot;&lt;file name&gt;, p.&lt;page&gt;&quot;, copied exactly: never a finding without one. &quot;gaps&quot;: one short line per gap
+    and one per conflict, at most 8 lines.&quot;
 - run_subagent(agent, task): a FRESH agentic loop whose first and only user message is the task text. Pass only that
   agent&#x27;s own tools (send no tools parameter when it has none). Same loop rules as Lab 31: append the whole
   response.content, all tool_result blocks in ONE user message with is_error, stop when stop_reason is not &quot;tool_use&quot;
@@ -143,90 +158,111 @@ Then show me the file tree, and tell me to open .env in the editor and replace p
 <p><strong>Run it in your terminal</strong>, in your project folder:</p>
 <div class="prompt cmd"><div class="bar"><span>Terminal</span><button type="button" class="copy" data-for="c2">Copy command</button></div><pre id="c2">uv run agents.py search &quot;Research how AI is affecting the film sector.&quot;</pre></div>
 <p class="check"><strong>Checkpoint.</strong> The film search agent makes one or two <code>search_web</code> calls, both <code>timeout</code>. Its JSON still holds the Indie Screen Council finding from <code>partial_results</code>, plus a gap saying the film search timed out. It didn't crash, and it didn't pretend the search worked.</p>
-<h2 id="step-4-write-the-coordinator-15-minutes">Step 4 · Write the coordinator (15 minutes)</h2>
+<h2 id="step-4-write-the-coordinator-version-1-the-exam-question-s-plan-10-minutes">Step 4 · Write the coordinator, version 1: the exam question's plan (10 minutes)</h2>
+<p>The coordinator's system prompt has six rules. <strong>Rule 1 is its task decomposition</strong>: it decides which subtasks the search agents get. In version 1, rule 1 is the plan from the exam question's coordinator logs, so you get the exam's failure every time.</p>
 <h3>Prompt 4</h3>
-<div class="prompt"><div class="bar"><span>Paste into your AI coding tool's chat</span><button type="button" class="copy" data-for="p4">Copy prompt</button></div><pre id="p4">Create research.py, the coordinator. It never searches or reads documents itself: it delegates to the subagents.
+<div class="prompt"><div class="bar"><span>Paste into your AI coding tool's chat</span><button type="button" class="copy" data-for="p4">Copy prompt</button></div><pre id="p4">Create research.py, the coordinator. It never searches, reads documents or writes the report itself: it delegates to
+the four subagents in agents.py.
 
 - One tool for Claude, &quot;delegate&quot;, with input {agent: one of the AGENTS names (enum), task: string}. Description:
   &quot;Give one task to a subagent and get its result back. agent: &#x27;search&#x27; (web search on one sector), &#x27;documents&#x27; (reads
-  the internal PDFs), &#x27;synthesis&#x27; (writes the final report from the findings you paste in). The subagent sees ONLY the
-  task text, never this conversation.&quot;
-- Use this system prompt exactly (SYSTEM), and keep its rule 1 in its own constant RULE_1:
-  &quot;You are the coordinator of a research team. You never search or read documents yourself: you delegate.
-  1. Decompose the topic into the distinct sectors it spans. For creative industries, cover at least music, writing,
-     film and visual arts. Breadth first: a narrow plan makes a narrow report.
-  2. In ONE turn, delegate one &quot;search&quot; task per sector (they run in parallel), plus one &quot;documents&quot; task that names
+  the internal PDFs), &#x27;synthesis&#x27; (combines the findings you paste in), &#x27;report&#x27; (writes the final cited report from
+  the synthesis you paste in). The subagent sees ONLY the task text, never this conversation.&quot;
+- Rule 1 of the system prompt is the task decomposition. Keep it in its own constant:
+  RULE_1 = &quot;1. Decompose the topic into three search subtasks: AI in digital art creation; AI in graphic design; AI in photography.&quot;
+- SYSTEM is this system prompt exactly, with RULE_1 put in place of {rule_1}:
+  &quot;You are the coordinator of a research team. You never search, read documents or write the report yourself: you delegate.
+  {rule_1}
+  2. In ONE turn, delegate one &quot;search&quot; task per subtask (they run in parallel), plus one &quot;documents&quot; task that names
      both internal documents: Halden-Rao-2026-Journal-of-Creative-Economies.pdf and BrightCanvas-Customer-Benchmark-2026.pdf.
   3. Subagents see nothing but their task text. Put everything a subagent needs in its task.
   4. When the results are back, delegate ONE &quot;synthesis&quot; task. Paste into it every finding with its exact source and
      every gap the subagents reported.
-  5. Then reply with a two-sentence summary for the user.&quot;
-- run_research(topic, plan=None): the coordinator&#x27;s agentic loop (claude-haiku-5-5, max 8 turns), user message
-  &quot;Research topic: &lt;topic&gt;&quot;. If plan is given, replace RULE_1 in the system prompt with
-  &quot;1. Follow exactly this research plan, one search task per subtask and nothing else: &lt;plan&gt;&quot;.
-  Run ALL the delegate calls from one turn AT THE SAME TIME with a ThreadPoolExecutor, then send every subagent&#x27;s
-  final text back as the tool_result blocks in ONE user message. Record each delegation (run_subagent&#x27;s dict plus the
-  coordinator turn number).
+  5. When the synthesis is back, delegate ONE &quot;report&quot; task. Paste the synthesis JSON into it, unchanged.
+  6. Then reply with a two-sentence summary for the user.&quot;
+- run_research(topic): the coordinator&#x27;s agentic loop (claude-haiku-5-5, max 8 turns), user message
+  &quot;Research topic: &lt;topic&gt;&quot;. Run ALL the delegate calls from one turn AT THE SAME TIME with a ThreadPoolExecutor, then
+  send every subagent&#x27;s final text back as the tool_result blocks in ONE user message. Record each delegation
+  (run_subagent&#x27;s dict plus the coordinator turn number).
 - coverage(delegations): the sectors that a search_web call actually hit (the result&#x27;s sector, or sector_of the query
   when it failed) and the sectors in sources.json that were never searched.
 - check_provenance(report), a gate in code: a finding whose source contains no URL or document name from
   sources.json is removed from findings and added to gaps as &quot;Unsourced claim removed: &lt;claim&gt;&quot;. Print each one.
-- run_research returns {&quot;topic&quot;, &quot;summary&quot;: the coordinator&#x27;s final text, &quot;report&quot;: the last synthesis JSON after
+- run_research returns {&quot;topic&quot;, &quot;summary&quot;: the coordinator&#x27;s final text, &quot;report&quot;: the last report agent&#x27;s JSON after
   check_provenance (or {}), &quot;delegations&quot;, &quot;searched&quot;, &quot;missing&quot;}.
-- research.py run directly: uv run research.py &quot;&lt;topic&gt;&quot; [--plan &quot;&lt;a; b; c&gt;&quot;]. Print each coordinator turn with its
-  stop_reason and number of delegations, each delegation with its agent, the first 90 characters of its task and its
-  tool calls (ok or the error category), and how many seconds the turn&#x27;s subagents took. Write report.json and
-  report.md (title, summary, one bullet per finding with its source, then the gaps). Print report.md, then
-  &quot;Coverage: searched ...; never searched: ...&quot;, then the coordinator&#x27;s summary.</pre></div>
+- research.py run directly: uv run research.py &quot;&lt;topic&gt;&quot;. First print &quot;Coordinator rule 1: &quot; and the rule in use. Print
+  each coordinator turn with its stop_reason and number of delegations, each delegation with its agent, the first 90
+  characters of its task and its tool calls (ok or the error category), and how many seconds the turn&#x27;s subagents took.
+  Write report.json and report.md (title, summary, one bullet per finding with its source, then the gaps). Print
+  report.md, then &quot;Coverage: searched ...; never searched: ...&quot;, then the coordinator&#x27;s summary.</pre></div>
 <p><strong>Run it in your terminal</strong>, in your project folder:</p>
 <div class="prompt cmd"><div class="bar"><span>Terminal</span><button type="button" class="copy" data-for="c3">Copy command</button></div><pre id="c3">uv run research.py &quot;Impact of AI on creative industries&quot;</pre></div>
-<p class="check"><strong>Checkpoint.</strong> Coordinator turn 1 sends <strong>five or more delegations at once</strong>: one search per sector and one documents task. They finish in roughly the time of the slowest one, not the sum (Day 1, Lab 3). Turn 2 is one synthesis. Turn 3 is <code>end_turn</code>. <code>report.md</code> cites a URL or PDF page for every claim (the provenance check removes any claim without one), flags BrightCanvas as a vendor poll, lists the film timeout under <strong>Gaps</strong>, and the last line says <code>never searched: none</code>.</p>
-<h2 id="step-5-replay-the-exam-question-s-plan-5-minutes-no-code-change">Step 5 · Replay the exam question's plan (5 minutes, no code change)</h2>
-<p>No prompt this time, and no code change. Run the narrow plan from the exam question. <strong>Run it in your terminal</strong>, in your project folder:</p>
-<div class="prompt cmd"><div class="bar"><span>Terminal</span><button type="button" class="copy" data-for="c4">Copy command</button></div><pre id="c4">uv run research.py &quot;Impact of AI on creative industries&quot; --plan &quot;AI in digital art creation; AI in graphic design; AI in photography&quot;</pre></div>
-<p>Compare it with the last run. Did any subagent fail? What is missing from the report, and which agent caused it?</p>
-<p class="check"><strong>Checkpoint.</strong> Every subagent succeeds. The report is tidy, cited and confident, and it covers only visual arts. The coverage line says <code>never searched: film, music, writing</code>. No subagent did anything wrong: <strong>the coordinator's decomposition was too narrow</strong> (Day 1, Lab 2, answer B). That's why the coverage check lives in code. A report can look complete without being complete.</p>
-<h2 id="step-6-prove-it-with-live-tests-10-minutes">Step 6 · Prove it with live tests (10 minutes)</h2>
+<p class="check"><strong>Checkpoint: the exam question, live.</strong> Turn 1 sends <strong>four delegations at once</strong>: three searches (digital art, graphic design, photography) and one documents task. Turn 2 is the synthesis, turn 3 the report, turn 4 is <code>end_turn</code>. <strong>Every subagent succeeds</strong>: no errors, a tidy, cited, confident report. But it covers only visual arts, and the last line says <code>never searched: film, music, writing</code>.</p>
+<p>Before you read on, answer the exam question for this run: <strong>which agent caused the missing sectors?</strong></p>
+<h2 id="step-5-explain-the-fix-5-minutes-no-code">Step 5 · Explain the fix (5 minutes, no code)</h2>
+<p>Go through the exam question's four options with what your run actually did:</p>
+<div class="tw"><table><tr><th>Option</th><th>Is it the cause?</th><th>What your run shows</th></tr><tr><td>A. The synthesis agent lacks instructions for finding coverage gaps</td><td>No</td><td>It combined every finding it was given. It can't write about music it never received.</td></tr><tr><td><strong>B. The coordinator's task decomposition is too narrow</strong></td><td><strong>Yes</strong></td><td>The coordinator turned "creative industries" into three visual-arts subtasks. Nothing ever asked about music, writing or film.</td></tr><tr><td>C. The web search agent's queries are not broad enough</td><td>No</td><td>Each search agent searched its own subtask well. Its subtask was the problem, not its queries.</td></tr><tr><td>D. The document analysis agent filters out non-visual sources</td><td>No</td><td>It read both PDFs and reported both.</td></tr></table></div>
+<p><strong>Is the fix in the coordinator's system prompt? Yes.</strong> The decomposition is the coordinator's job, and the coordinator decides it from two inputs: your topic (the user message) and its system prompt. The topic was already broad: "creative industries". The narrowing came from <strong>rule 1 of the coordinator's system prompt</strong>, so that is the one line you fix. You change no subagent, no tool and no test. The new rule 1 tells the coordinator to map every sector the topic spans <strong>before</strong> it splits the work: breadth first, one search subtask per sector.</p>
+<p>The prompt fix is the first line of defence. The second lives in code: <code>coverage()</code> compares the sectors actually searched with every sector in <code>sources.json</code> and prints <code>never searched: ...</code> on every run, whatever the prompt says. A report can look complete without being complete, so you check coverage in code, not by asking Claude. (In production the coordinator would also re-delegate the missing sectors when coverage finds a gap: that's task 1.2's iterative refinement.)</p>
+<h2 id="step-6-apply-the-fix-to-the-task-decomposition-5-minutes">Step 6 · Apply the fix to the task decomposition (5 minutes)</h2>
 <h3>Prompt 5</h3>
-<div class="prompt"><div class="bar"><span>Paste into your AI coding tool's chat</span><button type="button" class="copy" data-for="p5">Copy prompt</button></div><pre id="p5">Write test_research.py. It imports run_research from research.py, does two live runs, prints PASS or FAIL for each
-check, prints &quot;N/8 checks passed&quot; and exits 1 if any check fails. Check the recorded delegations and tool calls,
-not Claude&#x27;s wording.
+<div class="prompt"><div class="bar"><span>Paste into your AI coding tool's chat</span><button type="button" class="copy" data-for="p5">Copy prompt</button></div><pre id="p5">Fix the coordinator&#x27;s task decomposition. Change only research.py, and in it only rule 1 of the coordinator&#x27;s system
+prompt. Do not change agents.py, research_tools.py or rules 2 to 6.
 
-Run A: run_research(&quot;Impact of AI on creative industries&quot;)
-  1. a search ran for every sector: music, writing, film, visual arts (nothing in &quot;missing&quot;)
-  2. two or more search delegations ran in the same coordinator turn (parallel)
-  3. every subagent used only its own tools (search: search_web; documents: read_document; synthesis: none)
-  4. the synthesis task carried the findings: at least 3 URLs from sources.json appear in its task text
-  5. every finding&#x27;s source in the report contains a URL or document name from sources.json
-  6. the report&#x27;s findings cite URLs from at least 3 different sectors
-  7. one of the report&#x27;s gaps mentions film
-Run B: run_research(&quot;Impact of AI on creative industries&quot;,
-                    plan=&quot;AI in digital art creation; AI in graphic design; AI in photography&quot;)
-  8. &quot;missing&quot; includes music, writing and film
-</pre></div>
+- Rename the RULE_1 constant to RULE_1_NARROW and keep its text: it is version 1, the exam question&#x27;s plan.
+- Add a new RULE_1, exactly:
+  &quot;1. Decompose the topic into the distinct sectors it spans before you split it. For creative industries, cover at
+     least music, writing, film and visual arts: one search subtask per sector. Breadth first: a narrow plan makes a narrow report.&quot;
+- SYSTEM puts RULE_1 in place of {rule_1}. run_research(topic, narrow=False) puts RULE_1_NARROW there instead when
+  narrow is True, so the old plan can still be replayed.
+- research.py run directly takes an optional --narrow flag that calls run_research(topic, narrow=True). It still prints
+  &quot;Coordinator rule 1: &quot; and the rule in use first.</pre></div>
+<p><strong>Run it in your terminal</strong>, in your project folder. First the fixed coordinator, then the old plan again to compare:</p>
+<div class="prompt cmd"><div class="bar"><span>Terminal</span><button type="button" class="copy" data-for="c4">Copy command</button></div><pre id="c4">uv run research.py &quot;Impact of AI on creative industries&quot;</pre></div>
+<div class="prompt cmd"><div class="bar"><span>Terminal</span><button type="button" class="copy" data-for="c5">Copy command</button></div><pre id="c5">uv run research.py &quot;Impact of AI on creative industries&quot; --narrow</pre></div>
+<p class="check"><strong>Checkpoint.</strong> With the fix, turn 1 sends <strong>five or more delegations at once</strong>: one search per sector and one documents task. They finish in roughly the time of the slowest one, not the sum (Day 1, Lab 3). Turn 2 is the synthesis, turn 3 the report, turn 4 <code>end_turn</code>. <code>report.md</code> cites a URL or PDF page for every claim (the provenance check removes any claim without one), flags BrightCanvas as a vendor poll, lists the film timeout under <strong>Gaps</strong>, and the last line says <code>never searched: none</code>. With <code>--narrow</code> you get Step 4's visual-arts-only report again. The only difference between the two runs is rule 1.</p>
+<h2 id="step-7-prove-it-with-live-tests-10-minutes">Step 7 · Prove it with live tests (10 minutes)</h2>
+<h3>Prompt 6</h3>
+<div class="prompt"><div class="bar"><span>Paste into your AI coding tool's chat</span><button type="button" class="copy" data-for="p6">Copy prompt</button></div><pre id="p6">Write test_research.py. It imports run_research from research.py, does two live runs, prints PASS or FAIL for each
+check, prints &quot;N/10 checks passed&quot; and exits 1 if any check fails. Check the recorded delegations and tool calls,
+not Claude&#x27;s wording. Print a heading before each run.
+
+Run 1, BEFORE the fix: run_research(&quot;Impact of AI on creative industries&quot;, narrow=True)
+  1. every subagent completed: each returned its JSON and none of its tool calls failed
+  2. yet &quot;missing&quot; includes music, writing and film
+Run 2, AFTER the fix: run_research(&quot;Impact of AI on creative industries&quot;)
+  3. a search ran for every sector: music, writing, film, visual arts (nothing in &quot;missing&quot;)
+  4. two or more search delegations ran in the same coordinator turn (parallel)
+  5. every subagent used only its own tools (search: search_web; documents: read_document; synthesis and report: none)
+  6. the synthesis task carried the findings: at least 3 URLs from sources.json appear in its task text
+  7. the report task carried the synthesis: at least 3 URLs from sources.json appear in its task text
+  8. every finding&#x27;s source in the report contains a URL or document name from sources.json
+  9. the report&#x27;s findings cite URLs from at least 3 different sectors
+  10. one of the report&#x27;s gaps mentions film</pre></div>
 <p><strong>Run it in your terminal</strong>, in your project folder:</p>
-<div class="prompt cmd"><div class="bar"><span>Terminal</span><button type="button" class="copy" data-for="c5">Copy command</button></div><pre id="c5">uv run test_research.py</pre></div>
+<div class="prompt cmd"><div class="bar"><span>Terminal</span><button type="button" class="copy" data-for="c6">Copy command</button></div><pre id="c6">uv run test_research.py</pre></div>
 <p>If a check fails, paste this into your AI coding tool:</p>
-<div class="prompt"><div class="bar"><span>Paste into your AI coding tool's chat</span><button type="button" class="copy" data-for="p6">Copy prompt</button></div><pre id="p6">test_research.py has a failing check. Run uv run test_research.py, show me which check fails and why, and fix
+<div class="prompt"><div class="bar"><span>Paste into your AI coding tool's chat</span><button type="button" class="copy" data-for="p7">Copy prompt</button></div><pre id="p7">test_research.py has a failing check. Run uv run test_research.py, show me which check fails and why, and fix
 research.py or agents.py, not the test. Then run it again.</pre></div>
-<p class="check"><strong>Checkpoint.</strong> <code>8/8 checks passed</code>. Take a screenshot of the final lines: that's your evidence for Bonus Topic B.</p>
+<p class="check"><strong>Checkpoint.</strong> <code>10/10 checks passed</code>. Run 1 proves the exam's symptom (every agent succeeds, three sectors missing); Run 2 proves the fix. Take a screenshot of the final lines: that's your evidence for Bonus Topic B.</p>
 <h2 id="run-it">Run it</h2>
 <p>From your project folder. Run them yourself in a terminal, or paste one into your coding tool's chat as "Run: &lt;command&gt; and show me the output."</p>
-<div class="tw"><table><tr><th>What</th><th>Command</th></tr><tr><td>Check the tools on their own</td><td><code>uv run check_tools.py</code></td></tr><tr><td>The whole team on the topic</td><td><code>uv run research.py &quot;Impact of AI on creative industries&quot;</code></td></tr><tr><td>The exam question's narrow plan</td><td><code>uv run research.py &quot;Impact of AI on creative industries&quot; --plan &quot;AI in digital art creation; AI in graphic design; AI in photography&quot;</code></td></tr><tr><td>One subagent on its own</td><td><code>uv run agents.py search &quot;Research how AI is affecting the music sector.&quot;</code></td></tr><tr><td>The live tests: two runs, eight checks</td><td><code>uv run test_research.py</code></td></tr><tr><td>The last report</td><td>open <code>report.md</code></td></tr></table></div>
+<div class="tw"><table><tr><th>What</th><th>Command</th></tr><tr><td>Check the tools on their own</td><td><code>uv run check_tools.py</code></td></tr><tr><td>One subagent on its own</td><td><code>uv run agents.py search &quot;Research how AI is affecting the music sector.&quot;</code></td></tr><tr><td>The fixed team on the topic</td><td><code>uv run research.py &quot;Impact of AI on creative industries&quot;</code></td></tr><tr><td>Before the fix: the exam question's narrow plan</td><td><code>uv run research.py &quot;Impact of AI on creative industries&quot; --narrow</code></td></tr><tr><td>The live tests: before and after, ten checks</td><td><code>uv run test_research.py</code></td></tr><tr><td>The last report</td><td>open <code>report.md</code></td></tr></table></div>
 <p>Our run is in <code>sample-output.txt</code>.</p>
 <h2 id="stretch-the-same-team-in-the-claude-agent-sdk">Stretch · The same team in the Claude Agent SDK</h2>
-<div class="prompt"><div class="bar"><span>Paste into your AI coding tool's chat</span><button type="button" class="copy" data-for="p7">Copy prompt</button></div><pre id="p7">Make sdk_team.py: the same research team built with the Claude Agent SDK (uv add claude-agent-sdk), model
-claude-haiku-5-5. Define &quot;search&quot;, &quot;documents&quot; and &quot;synthesis&quot; as AgentDefinition subagents with the same system
-prompts, expose search_web and read_document through an in-process SDK MCP server, give each subagent only its own
-tool, and let the coordinator spawn them with the Task tool. sdk_team.py takes the topic as its first argument.</pre></div>
+<div class="prompt"><div class="bar"><span>Paste into your AI coding tool's chat</span><button type="button" class="copy" data-for="p8">Copy prompt</button></div><pre id="p8">Make sdk_team.py: the same research team built with the Claude Agent SDK (uv add claude-agent-sdk), model
+claude-haiku-5-5. Define &quot;search&quot;, &quot;documents&quot;, &quot;synthesis&quot; and &quot;report&quot; as AgentDefinition subagents with the same
+system prompts, expose search_web and read_document through an in-process SDK MCP server, give each subagent only its
+own tool, and let the coordinator spawn them with the Task tool, using the fixed rule 1. sdk_team.py takes the topic
+as its first argument.</pre></div>
 <p><strong>Run it in your terminal</strong>, in your project folder:</p>
-<div class="prompt cmd"><div class="bar"><span>Terminal</span><button type="button" class="copy" data-for="c6">Copy command</button></div><pre id="c6">uv run sdk_team.py &quot;Impact of AI on creative industries&quot;</pre></div>
-<p>Compare the two. The SDK runs the loops and the Task tool for you, but the rules don't change: a subagent knows only what its prompt says, and the coordinator owns the plan.</p>
+<div class="prompt cmd"><div class="bar"><span>Terminal</span><button type="button" class="copy" data-for="c7">Copy command</button></div><pre id="c7">uv run sdk_team.py &quot;Impact of AI on creative industries&quot;</pre></div>
+<p>Compare the two. The SDK runs the loops and the Task tool for you, but the rules don't change: a subagent knows only what its prompt says, and the coordinator's system prompt owns the plan.</p>
 <h2 id="explain-it-back-with-your-trainer">Explain it back (with your trainer)</h2>
-<ul><li><strong>1.</strong> In run B every subagent succeeded. Which agent caused the missing sectors, and which line of <code>research.py</code> would you change? (Day 1, Lab 2.)</li><li><strong>2.</strong> The synthesis agent never saw the search agents' work. How did the findings reach it? What happens if the coordinator writes only "write the report"?</li><li><strong>3.</strong> Why do <code>coverage()</code> and <code>check_provenance()</code> live in code instead of asking Claude whether the report is complete and cited?</li><li><strong>4.</strong> The film search failed, yet one film finding reached the report. Where did it come from, and why is it marked as a gap too? (Day 1, Lab 27.)</li></ul>
+<ul><li><strong>1.</strong> In Step 4 every subagent succeeded. Which agent caused the missing sectors, and which line did you change to fix it? Why not the synthesis or search agent's prompt? (Day 1, Lab 2.)</li><li><strong>2.</strong> The report agent never saw the search agents' work. How did the findings reach it? What happens if the coordinator writes only "write the report"?</li><li><strong>3.</strong> Why do <code>coverage()</code> and <code>check_provenance()</code> live in code instead of asking Claude whether the report is complete and cited?</li><li><strong>4.</strong> The film search failed, yet one film finding reached the report. Where did it come from, and why is it listed as a gap too? (Day 1, Lab 27.)</li></ul>
 <h2 id="troubleshooting">Troubleshooting</h2>
-<div class="tw"><table><tr><th>You see</th><th>Fix prompt</th></tr><tr><td>The delegations run one after another (turn time = the sum)</td><td>"Run every delegate call from one coordinator turn at the same time with a ThreadPoolExecutor."</td></tr><tr><td>The coordinator searches one sector per turn</td><td>"Rule 2 says delegate every search in ONE turn. Keep the system prompt exactly as given."</td></tr><tr><td><code>report.json</code> is <code>{}</code></td><td>"The synthesis agent's reply must parse as JSON: strip ``` fences, and set max_tokens to 8000."</td></tr><tr><td>A report URL isn't in sources.json</td><td>"The synthesis task must paste every finding with its exact source URL; the agents must never invent a source."</td></tr><tr><td>Run B still searches music</td><td>"With --plan, replace RULE_1 in the system prompt; don't add the plan to the user message."</td></tr><tr><td>The film timeout disappears</td><td>"On a failed search, keep partial_results as findings and add a gap; never return an empty success."</td></tr><tr><td><code>tool_use ids were found without tool_result blocks</code></td><td>"Send every delegate tool_result in one user message right after the coordinator turn."</td></tr></table></div>
-<p class="note">7 prompts and 6 terminal commands on this page. Built from the lab's README.md.</p>
+<div class="tw"><table><tr><th>You see</th><th>Fix prompt</th></tr><tr><td>Version 1 already searches music, writing or film</td><td>"Rule 1 must be RULE_1 exactly as given, put into SYSTEM in place of {rule_1}. Don't add sectors to the user message."</td></tr><tr><td>The delegations run one after another (turn time = the sum)</td><td>"Run every delegate call from one coordinator turn at the same time with a ThreadPoolExecutor."</td></tr><tr><td>The coordinator searches one sector per turn</td><td>"Rule 2 says delegate every search in ONE turn. Keep the system prompt exactly as given."</td></tr><tr><td><code>report.json</code> is <code>{}</code></td><td>"The report agent's reply must parse as JSON: strip ``` fences, and set max_tokens to 8000."</td></tr><tr><td>A report URL isn't in sources.json, or real findings are removed as unsourced</td><td>"The synthesis and report tasks must paste every finding with its exact source; "source" holds only the URL or "&lt;file&gt;, p.&lt;page&gt;"."</td></tr><tr><td><code>--narrow</code> still searches music</td><td>"With --narrow, SYSTEM must use RULE_1_NARROW in place of {rule_1}; don't add the plan to the user message."</td></tr><tr><td>The film timeout disappears</td><td>"On a failed search, keep partial_results as findings and add a gap; never return an empty success."</td></tr><tr><td>Test check 2 fails once: run 1 searched film, music or writing</td><td>A version-1 search query used another sector's word (for example "film photography"). Run <code>uv run test_research.py</code> again. If it repeats, paste: "In --narrow runs the coordinator must use RULE_1_NARROW only, and each search task names only its subtask."</td></tr><tr><td><code>tool_use ids were found without tool_result blocks</code></td><td>"Send every delegate tool_result in one user message right after the coordinator turn."</td></tr></table></div>
+<p class="note">8 prompts and 7 terminal commands on this page. Built from the lab's README.md.</p>
 </main>
 <footer class="powered-by">Powered by <a href="https://www.tertiaryinfotech.com/" target="_blank" rel="noopener">Tertiary Infotech Academy Pte Ltd</a></footer>
 <script>

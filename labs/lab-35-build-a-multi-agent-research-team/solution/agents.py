@@ -1,5 +1,6 @@
-"""The three subagents. Each run starts a FRESH conversation that holds only its task: no subagent sees the
-coordinator's messages or another subagent's work. Each gets only its own tools."""
+"""The four subagents of Scenario 3: web search, document analysis, synthesis and report generation.
+Each run starts a FRESH conversation that holds only its task: no subagent sees the coordinator's messages or another
+subagent's work. Each gets only its own tools."""
 import json
 import re
 import sys
@@ -30,11 +31,21 @@ Never invent a source.""",
     },
     "synthesis": {
         "tools": [],
-        "system": """You are a synthesis subagent. Write a short research report using ONLY the findings in your task.
-Return ONLY a JSON object: {"title": str, "summary": str, "findings": [{"sector": str, "claim": str, "source": str}], "gaps": [str]}.
-Summary under 80 words. One finding per source, and every finding keeps its source (url or document reference) exactly
-as given: never a finding without a source. "gaps" lists, one line each, the failed searches, the searches that found
-nothing and the unreadable documents you were told about.""",
+        "system": """You are a synthesis subagent. Combine the findings in your task into one evidence set, using ONLY those findings.
+Return ONLY a JSON object: {"findings": [{"sector": str, "claim": str, "source": str, "evidence": str}], "conflicts": [str], "gaps": [str]}.
+Group the findings by sector. "source" is ONLY the url or "<file name>, p.<page>", copied exactly: never a finding without one.
+"evidence" says what kind of source it is (survey, poll, peer-reviewed article, vendor benchmark). "conflicts" names
+figures that disagree or measure different things. "gaps" lists, one short line each, the failed searches, the searches
+that found nothing and the unreadable documents you were told about.""",
+    },
+    "report": {
+        "tools": [],
+        "system": """You are a report-generation subagent. Write the final research report from the synthesized findings in your
+task, using ONLY those findings. Return ONLY a JSON object:
+{"title": str, "summary": str, "findings": [{"sector": str, "claim": str, "source": str}], "gaps": [str]}.
+Summary under 80 words. One finding per source: "claim" is one sentence with its number and evidence type, and "source"
+is ONLY the url or "<file name>, p.<page>", copied exactly: never a finding without one. "gaps": one short line per gap
+and one per conflict, at most 8 lines.""",
     },
 }
 
