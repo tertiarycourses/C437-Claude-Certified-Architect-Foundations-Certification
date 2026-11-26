@@ -1,19 +1,12 @@
 # Lab 35: Vibe-code a multi-agent research team
 
-> Day 2 · Bonus Topic B · Multi-Agent Research System · Task statements 1.2, 1.3, 5.3 · Vibe-coding lab · Claude Haiku 5.5 · 60 minutes
+> Day 2 · Multi-Agent Research System · Task statements 1.2, 1.3, 5.3 · Vibe-coding lab · Claude Haiku 5.5 · 60 minutes
 
 **Be the manager of your own AI research department. A coordinator delegates to four subagents: one searches the web, one analyzes documents, one synthesizes the findings and one writes the cited report. In Scenario 1 every agent does its job, yet the report covers only visual arts. You find the one agent that caused it, fix one rule in its system prompt, and in Scenario 2 the same team covers music, writing, film and visual arts.**
 
 **Lab page:** [the main lab page](https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/) lists every lab. Copy the prompts from [this lab's prompt page](https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/lab-35.html) (one Copy button per prompt), or from `prompts.html` in this folder.
 
-## Day 2: two bonus topics
-
-| Lab | You build | Exam tasks |
-|---|---|---|
-| 31–34 | **Bonus Topic A:** one customer resolution agent, then its MCP server and its two hooks | 1.1, 1.4, 1.5, 2.1, 2.2, 2.4 |
-| **35 (this lab)** | **Bonus Topic B:** a coordinator and four subagents: a narrow plan, the fix, then the full report | 1.2, 1.3, 5.3 |
-
-This is a **new project**, not the Orderly agent. Make a fresh folder for it.
+This is a **new project**, not the Orderly agent from Labs 31 to 34. Make a fresh folder for it.
 
 ## What you'll build
 
@@ -336,7 +329,7 @@ test_research.py has a failing check. Run uv run test_research.py, show me which
 research.py or agents.py, not the test. Then run it again.
 ```
 
-**Checkpoint.** `10/10 checks passed`. Scenario 1 proves the problem (every agent succeeds, three sectors missing); Scenario 2 proves the fix. Take a screenshot of the final lines: that's your evidence for Bonus Topic B.
+**Checkpoint.** `10/10 checks passed`. Scenario 1 proves the problem (every agent succeeds, three sectors missing); Scenario 2 proves the fix. Take a screenshot of the final lines: that's your evidence for this lab.
 
 ## Run it
 

@@ -28,11 +28,9 @@ pre.plain{background:#fff;border:1px solid var(--line);border-radius:8px;white-s
 <main>
 <div class="links"><a href="README.pdf">Lab PDF</a><a href="solution/">Reference solution</a><a href="sample-output.txt">Sample output</a><a href="starter/sources.json">sources.json</a></div>
 <h1>Lab 35: Vibe-code a multi-agent research team</h1>
-<p class="note">Day 2 · Bonus Topic B · Multi-Agent Research System · Task statements 1.2, 1.3, 5.3 · Vibe-coding lab · Claude Haiku 5.5 · 60 minutes</p>
+<p class="note">Day 2 · Multi-Agent Research System · Task statements 1.2, 1.3, 5.3 · Vibe-coding lab · Claude Haiku 5.5 · 60 minutes</p>
 <p><strong>Be the manager of your own AI research department. A coordinator delegates to four subagents: one searches the web, one analyzes documents, one synthesizes the findings and one writes the cited report. In Scenario 1 every agent does its job, yet the report covers only visual arts. You find the one agent that caused it, fix one rule in its system prompt, and in Scenario 2 the same team covers music, writing, film and visual arts.</strong></p>
-<h2 id="day-2-two-bonus-topics">Day 2: two bonus topics</h2>
-<div class="tw"><table><tr><th>Lab</th><th>You build</th><th>Exam tasks</th></tr><tr><td>31–34</td><td><strong>Bonus Topic A:</strong> one customer resolution agent, then its MCP server and its two hooks</td><td>1.1, 1.4, 1.5, 2.1, 2.2, 2.4</td></tr><tr><td><strong>35 (this lab)</strong></td><td><strong>Bonus Topic B:</strong> a coordinator and four subagents: a narrow plan, the fix, then the full report</td><td>1.2, 1.3, 5.3</td></tr></table></div>
-<p>This is a <strong>new project</strong>, not the Orderly agent. Make a fresh folder for it.</p>
+<p>This is a <strong>new project</strong>, not the Orderly agent from Labs 31 to 34. Make a fresh folder for it.</p>
 <h2 id="what-you-ll-build">What you'll build</h2>
 <pre class="plain">  &quot;Impact of AI on creative industries&quot;
         |
@@ -249,7 +247,7 @@ Scenario 2, AFTER the fix: run_research(&quot;Impact of AI on creative industrie
 <p>If a check fails, paste this into your AI coding tool:</p>
 <div class="prompt"><div class="bar"><span>Paste into your AI coding tool's chat</span><button type="button" class="copy" data-for="p7">Copy prompt</button></div><pre id="p7">test_research.py has a failing check. Run uv run test_research.py, show me which check fails and why, and fix
 research.py or agents.py, not the test. Then run it again.</pre></div>
-<p class="check"><strong>Checkpoint.</strong> <code>10/10 checks passed</code>. Scenario 1 proves the problem (every agent succeeds, three sectors missing); Scenario 2 proves the fix. Take a screenshot of the final lines: that's your evidence for Bonus Topic B.</p>
+<p class="check"><strong>Checkpoint.</strong> <code>10/10 checks passed</code>. Scenario 1 proves the problem (every agent succeeds, three sectors missing); Scenario 2 proves the fix. Take a screenshot of the final lines: that's your evidence for this lab.</p>
 <h2 id="run-it">Run it</h2>
 <p>From your project folder. Run them yourself in a terminal, or paste one into your coding tool's chat as "Run: &lt;command&gt; and show me the output."</p>
 <div class="tw"><table><tr><th>What</th><th>Command</th></tr><tr><td>Check the tools on their own</td><td><code>uv run check_tools.py</code></td></tr><tr><td>One subagent on its own</td><td><code>uv run agents.py search &quot;Research how AI is affecting the music sector.&quot;</code></td></tr><tr><td>Scenario 2: the fixed team on the topic</td><td><code>uv run research.py &quot;Impact of AI on creative industries&quot;</code></td></tr><tr><td>Scenario 1 again: the first plan</td><td><code>uv run research.py &quot;Impact of AI on creative industries&quot; --narrow</code></td></tr><tr><td>The live tests: both scenarios, ten checks</td><td><code>uv run test_research.py</code></td></tr><tr><td>The last report</td><td>open <code>report.md</code></td></tr></table></div>
