@@ -15,6 +15,10 @@ Prepare for Anthropic's CCAR-F exam task statement by task statement: answer eac
 
 ![Cover slide of the C437 trainer slides v3.9](screenshot.png)
 
+## About the course
+
+A two-day, non-WSQ course that prepares you for Anthropic's Claude Certified Architect - Foundations (CCAR-F) exam. Day 1 works through all 30 task statements in the exam's five domains: each one is an exam-style question, then a live run in your browser that shows the trap and the fix. Day 2 builds what the questions describe with an AI coding tool, a customer resolution agent and a multi-agent research team, and ends with a 60-question practice exam.
+
 ## The exam at a glance
 
 | | |
@@ -49,7 +53,9 @@ By the end of the course you will be able to:
 - Produce validated structured outputs using clear criteria, few-shot examples, batching and review loops.
 - Manage context, uncertainty, provenance and human escalation in large, long-running AI systems.
 
-## Exam domains and where each is covered
+## Topics covered
+
+One topic per exam domain on Day 1, then two build topics on Day 2.
 
 | Topic | Exam domain | Exam weight | Task statements | Labs |
 |---|---|---:|---|---|
@@ -195,6 +201,8 @@ Optional builds in curl, the Python SDK and Claude Code, for task statements you
 - [Learner Guide, Word](courseware/LG-Claude-Certified-Architect-Foundations-CCAR-F-v2.9.docx), [PDF](courseware/LG-Claude-Certified-Architect-Foundations-CCAR-F-v2.9.pdf) and [Markdown](courseware/LG-Claude-Certified-Architect-Foundations-CCAR-F-v2.9.md)
 - [The labs folder](labs/): 46 lab folders (30 Day 1, 5 Day 2, 11 optional code builds) and the six Python simulators
 - [`docs/`](docs/): the source of the [lab site](https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/) (GitHub Pages)
+
+Not published here: the trainer's source references and superseded courseware versions. This non-WSQ course has no assessment.
 
 Your API key stays on your machine: the lab site keeps it in your browser only, and the Day 2 labs read it from a `.env` file that is never committed.
 
