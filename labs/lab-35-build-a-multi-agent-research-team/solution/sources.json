@@ -3,8 +3,8 @@
   "sectors": {
     "film": ["film", "movie", "cinema", "screen", "animation", "vfx", "visual effects"],
     "music": ["music", "musician", "song", "composer", "record label"],
-    "writing": ["writing", "writer", "author", "book", "publish", "novel", "journalis", "copywrit"],
-    "visual_arts": ["visual art", "digital art", "artist", "design", "photo", "illustrat", "graphic", "painting", "image"]
+    "visual_arts": ["visual art", "digital art", "artist", "design", "photo", "illustrat", "graphic", "painting", "image"],
+    "writing": ["writing", "writer", "author", "book", "publish", "novel", "journalis", "copywrit"]
   },
   "web": {
     "music": [

@@ -1,6 +1,6 @@
 """The coordinator of a multi-agent research team (Scenario 3). It plans, delegates to four subagents, and runs every
 delegation from one turn IN PARALLEL. Run:  uv run research.py "Impact of AI on creative industries" [--narrow]
---narrow replays version 1 of the coordinator: the narrow decomposition from the exam question."""
+--narrow replays Scenario 1: the coordinator's first, narrow plan."""
 import json
 import sys
 import time
@@ -14,8 +14,8 @@ from research_tools import DATA, sector_of
 
 load_dotenv()
 MAX_TURNS = 8
-# Rule 1 is the coordinator's task decomposition. RULE_1_NARROW is the plan logged in the exam question (version 1);
-# RULE_1 is the fix. The fix is one rule in the coordinator's system prompt: no subagent changes.
+# Rule 1 is the coordinator's task decomposition. RULE_1_NARROW is the first plan (Scenario 1);
+# RULE_1 is the fix (Scenario 2). The fix is one rule in the coordinator's system prompt: no subagent changes.
 RULE_1_NARROW = "1. Decompose the topic into three search subtasks: AI in digital art creation; AI in graphic design; AI in photography."
 RULE_1 = """1. Decompose the topic into the distinct sectors it spans before you split it. For creative industries, cover at
    least music, writing, film and visual arts: one search subtask per sector. Breadth first: a narrow plan makes a narrow report."""
@@ -69,7 +69,7 @@ def check_provenance(report):
 
 
 def run_research(topic, narrow=False):
-    """narrow=True runs version 1 of the coordinator: the exam question's decomposition."""
+    """narrow=True runs Scenario 1: the coordinator's first, narrow plan."""
     client = anthropic.Anthropic()
     system = SYSTEM.format(rule_1=RULE_1_NARROW if narrow else RULE_1)
     messages = [{"role": "user", "content": f"Research topic: {topic}"}]

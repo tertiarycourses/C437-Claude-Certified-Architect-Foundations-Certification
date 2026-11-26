@@ -1,5 +1,5 @@
 """Live tests for the research team: two real runs, ten checks on the recorded delegations and tool calls.
-Run 1 replays the exam question (the coordinator's narrow decomposition); run 2 is the fixed coordinator.
+Scenario 1 is the coordinator's first, narrow plan; Scenario 2 is the fixed coordinator.
 Run:  uv run test_research.py"""
 from research import run_research
 from research_tools import DATA
@@ -22,18 +22,18 @@ def cited(source):
     return next((u for u in URLS if u in source), None) or next((d for d in DOCS if d in source), None)
 
 
-print("Run 1 · BEFORE the fix: the coordinator's narrow decomposition from the exam question\n")
+print("Scenario 1 · BEFORE the fix: the coordinator's first plan\n")
 b = run_research(TOPIC, narrow=True)
-print("\n--- checks, run 1 (before the fix) ---")
+print("\n--- checks, Scenario 1 (before the fix) ---")
 failed = [x["agent"] for x in b["delegations"] if x["json"] is None or any(c["is_error"] for c in x["calls"])]
 check("every subagent completed: each returned its JSON and no tool call failed", not failed, f"failed: {failed}")
 check("yet the coverage check flags music, writing and film as never searched",
       {"music", "writing", "film"} <= set(b["missing"]), f"never searched: {b['missing']}")
 
-print("\nRun 2 · AFTER the fix: rule 1 of the coordinator's system prompt covers every sector\n")
+print("\nScenario 2 · AFTER the fix: rule 1 of the coordinator's system prompt covers every sector\n")
 a = run_research(TOPIC)
 d = a["delegations"]
-print("\n--- checks, run 2 (after the fix) ---")
+print("\n--- checks, Scenario 2 (after the fix) ---")
 check("a search ran for every sector: music, writing, film, visual arts", not a["missing"], f"never searched: {a['missing']}")
 turns = [x["turn"] for x in d if x["agent"] == "search"]
 check("two or more searches ran in parallel (same coordinator turn)", any(turns.count(t) >= 2 for t in turns), f"turns {turns}")

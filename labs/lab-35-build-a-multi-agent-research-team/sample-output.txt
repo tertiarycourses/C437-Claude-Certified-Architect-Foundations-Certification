@@ -11,214 +11,191 @@ $ uv run agents.py search "Research how AI is affecting the film sector."
   search_web({'query': 'film industry AI report'}) -> ERROR {"errorCategory": "timeout", "isRetryable": false, "message": "search timed out for 'film industry AI report'", "sector": "film", "attempted_query": "film indus
 {"sector": "film", "findings": [{"claim": "44% of independent film productions used AI for visual-effects cleanup in 2025.", "source_url": "https://example.org/indie-screen-council-vfx", "source_title": "Indie Screen Council VFX survey", "published": "2026-06-08"}], "gaps": ["Query 'AI impact on film sector surveys reports' timed out (errorCategory: timeout, not retryable); only partial result returned, the Indie Screen Council VFX survey excerpt listed above.", "Query 'film industry AI report' also timed out (errorCategory: timeout, not retryable); it returned the same single partial result and no new findings.", "No further sources were obtained on AI's broader effects on film (e.g., production workflows, labor, scripting, distribution, or regulation), because the two-search limit was reached after both calls failed."]}
 
-# Step 4: version 1 of the coordinator, the exam question's plan (in solution/, replayed with --narrow)
+# Step 5 · Scenario 1: the coordinator's first plan (solution/ has the fix, so this replays the old rule with --narrow)
 $ uv run research.py "Impact of AI on creative industries" --narrow
 Coordinator rule 1: 1. Decompose the topic into three search subtasks: AI in digital art creation; AI in graphic design; AI in photography.
 
 Coordinator turn 1: stop_reason=tool_use, 4 delegation(s)
   -> search: 'Research topic: Impact of AI on creative industries. Your subtask: AI in digital art creat' (2 tool calls)
-       search_web({"query": "AI digital art creation"}) ok
-       search_web({"query": "AI digital art artists income copyright"}) ok
-  -> search: 'Research topic: Impact of AI on creative industries. Your subtask: AI in graphic design. U' (3 tool calls)
-       search_web({"query": "AI graphic design industry survey adoption jobs"}) ok
-       search_web({"query": "generative AI graphic design productivity study licensing concerns"}) ok
-       search_web({"query": "AI graphic design industry survey adoption jobs"}) ok
-  -> search: 'Research topic: Impact of AI on creative industries. Your subtask: AI in photography. Use ' (2 tool calls)
-       search_web({"query": "AI in photography industry report"}) ok
-       search_web({"query": "AI photography stock photo market photographers"}) ok
+       search_web({"query": "generative AI digital art creation survey artists 2025"}) ok
+       search_web({"query": "AI image generators artists income copyright lawsuits digital art 2024"}) ok
+  -> search: 'Research topic: Impact of AI on creative industries. Your subtask: AI in graphic design. F' (2 tool calls)
+       search_web({"query": "AI in graphic design survey 2024 2025 agencies freelance designers"}) ok
+       search_web({"query": "generative AI graphic design productivity study"}) ok
+  -> search: 'Research topic: Impact of AI on creative industries. Your subtask: AI in photography. Find' (2 tool calls)
+       search_web({"query": "AI in photography survey professional photographers 2025"}) ok
+       search_web({"query": "generative AI stock photo market photographers income"}) ok
+  -> documents: 'Read these two internal PDFs in full: (1) Halden-Rao-2026-Journal-of-Creative-Economies.pd' (2 tool calls)
+       read_document({"name": "Halden-Rao-2026-Journal-of-Creative-Economies.pdf"}) ok
+       read_document({"name": "BrightCanvas-Customer-Benchmark-2026.pdf"}) ok
+  (4 subagent(s) in 8s)
+
+Coordinator turn 2: stop_reason=tool_use, 1 delegation(s)
+  -> synthesis: 'Combine the following subagent findings on the research topic "Impact of AI on creative in' (0 tool calls)
+  (1 subagent(s) in 13s)
+
+Coordinator turn 3: stop_reason=tool_use, 1 delegation(s)
+  -> report: 'Write the final cited report on "Impact of AI on creative industries" using ONLY the synth' (0 tool calls)
+  (1 subagent(s) in 12s)
+
+Coordinator turn 4: stop_reason=end_turn, 0 delegation(s)
+
+=== Report (report.md) ===
+# Impact of AI on Creative Industries: Sourced Findings and Gaps
+
+Sourced evidence is thin: four figures from two external polls, one peer-reviewed study, and one vendor benchmark. The figures measure different outcomes and populations, so they are not directly comparable. Photography has no sourced findings, and no copyright, licensing, or income evidence was found. The BrightCanvas figure comes from a vendor's self-selected sample, and page numbers are unverified.
+
+- **digital_art**: In a membership-based flash poll (survey, not peer-reviewed, self-selected sample, size and method not stated), 37% of member illustrators lost at least one commission to AI image tools in 2025. (https://example.org/illustrators-circle-flash-poll)
+- **graphic_design**: In a survey-type industry report (type unconfirmed, sample size and methodology not stated), 71% of graphic design studios use AI image generation for concept work. (https://example.org/design-studio-pulse-2026)
+- **cross_cutting**: In a peer-reviewed journal study (stratified random sample of 3,100 firms in 12 countries), 41% of creative small firms adopted generative AI in 2025, up from 23% in 2023. (Halden-Rao-2026-Journal-of-Creative-Economies.pdf, p.112)
+- **cross_cutting**: In a vendor benchmark (opt-in poll of 640 BrightCanvas customers, self-selected and not representative), 78% of creative studios use generative AI every week. (BrightCanvas-Customer-Benchmark-2026.pdf, p.3)
+
+## Gaps
+- [photography] No sourced findings; search returned only adjacent visual-arts results.
+- [all sectors] No copyright, licensing, lawsuit, or income evidence found.
+- [cross_cutting] BrightCanvas 78% is a vendor, self-selected opt-in sample of customers, not representative.
+- [cross_cutting] Page numbers (p.112, p.3) were reported by the tool and are unverified; PDF text was a single short paragraph.
+- [conflict] 41%, 78%, 71%, and 37% measure different outcomes and populations and should not be compared directly.
+- [digital_art, graphic_design] Sample sizes and methods are unverifiable for the illustrator poll and Design Studio Pulse; the 37% covers illustrators, not digital artists generally.
+- [graphic_design] No controlled productivity, freelance pricing, or skill-requirement evidence found.
+- [cross_cutting] Searches were limited and returned largely the same two off-sector results.
+
+Coverage: searched visual_arts; never searched: film, music, writing
+
+=== Coordinator ===
+The report is complete but thin: it rests on four figures from two external polls, one peer-reviewed study (Halden-Rao 2026), and one vendor benchmark (BrightCanvas 2026). Photography produced no sourced findings, and no copyright, licensing, or income evidence turned up, so those gaps remain open.
+
+# Step 7 · Scenario 2: the same topic, with the fix to rule 1
+$ uv run research.py "Impact of AI on creative industries"
+Coordinator rule 1: 1. Decompose the topic into the distinct sectors it spans before you split it. For creative industries, cover at
+   least music, writing, film and visual arts: one search subtask per sector. Breadth first: a narrow plan makes a narrow report.
+
+Coordinator turn 1: stop_reason=tool_use, 6 delegation(s)
+  -> search: 'Research topic: Impact of AI on creative industries. Your sector: MUSIC (recording, compos' (2 tool calls)
+       search_web({"query": "AI music industry report 2025 streaming royalties AI-generated tracks"}) ok
+       search_web({"query": "AI music lawsuits voice cloning copyright labels 2025"}) ok
+  -> search: 'Research topic: Impact of AI on creative industries. Your sector: WRITING (books and publi' (2 tool calls)
+       search_web({"query": "AI impact on writing publishing journalism translation survey 2025"}) ok
+       search_web({"query": "AI training data lawsuits authors publishers licensing deals 2025"}) ok
+  -> search: 'Research topic: Impact of AI on creative industries. Your sector: FILM AND TELEVISION (scr' (2 tool calls)
+       search_web({"query": "AI impact film and television industry 2025 WGA SAG-AFTRA"}) ERROR timeout
+       search_web({"query": "generative AI film production VFX dubbing localization survey 2025"}) ERROR timeout
+  -> search: 'Research topic: Impact of AI on creative industries. Your sector: VISUAL ARTS AND ILLUSTRA' (2 tool calls)
+       search_web({"query": "AI impact on visual artists illustration survey income 2025"}) ok
+       search_web({"query": "Andersen v. Stability AI Getty Images lawsuit update"}) ok
+  -> search: 'Research topic: Impact of AI on creative industries. Your sector: GAMES, ADVERTISING AND D' (2 tool calls)
+       search_web({"query": "generative AI video game development survey 2025"}) ok
+       search_web({"query": "generative AI advertising agency creative production jobs cost 2025"}) ok
+  -> documents: 'Research topic: Impact of AI on creative industries. Read both internal documents in full:' (2 tool calls)
+       read_document({"name": "Halden-Rao-2026-Journal-of-Creative-Economies.pdf"}) ok
+       read_document({"name": "BrightCanvas-Customer-Benchmark-2026.pdf"}) ok
+  (6 subagent(s) in 7s)
+
+Coordinator turn 2: stop_reason=tool_use, 1 delegation(s)
+  -> synthesis: 'Research topic: Impact of AI on creative industries. Combine the subagent findings below i' (0 tool calls)
+  (1 subagent(s) in 14s)
+
+Coordinator turn 3: stop_reason=tool_use, 1 delegation(s)
+  -> report: 'Write the final cited report on: Impact of AI on creative industries. Use the synthesis JS' (0 tool calls)
+  (1 subagent(s) in 13s)
+
+Coordinator turn 4: stop_reason=end_turn, 0 delegation(s)
+
+=== Report (report.md) ===
+# Impact of AI on Creative Industries: Evidence Synthesis
+
+Evidence on AI in creative industries is thin and mostly self-reported or vendor-sourced. Adoption is the best-documented theme, with figures from 37% to 78% across music, writing, film, visual arts and design, but these measure different things and populations and are not directly comparable. Measured economic harm, legal outcomes and film/TV labor evidence are not established by this research. Games, advertising and design returned no usable evidence.
+
+- **music**: In an unverified survey dated 2026-03-19 (publisher unnamed, method and sample size not stated), 62% of surveyed independent labels reported using generative AI tools in music production during 2025. (https://example.org/northbridge-label-survey-2026)
+- **music**: In a self-selected member poll dated 2025-09-02 (not representative of musicians generally), 48% of member musicians reported using AI tools for composition or mixing at least once a month. (https://example.org/session-players-guild-poll)
+- **writing**: In a self-reported income study dated 2026-01-14 (sample size not visible; AI attribution respondent-reported), median freelance copywriting income fell 11% year over year, and 6 in 10 respondents blamed AI drafting tools. (https://example.org/freelance-writers-collective-income)
+- **writing**: In a small-sample tracker dated 2026-04-02 (25 publishers, low for generalization), 19 of 25 surveyed book publishers require authors to disclose AI assistance. (https://example.org/lanternhouse-ai-policy-tracker)
+- **film/TV**: In a partial excerpt dated 2026-06-08 (publisher and methodology unverified), 44% of independent film productions reported using AI for visual-effects cleanup in 2025. (https://example.org/indie-screen-council-vfx)
+- **visual arts**: In an excerpt dated 2026-05-12 from a self-selected membership flash poll, 37% of member illustrators reported losing at least one commission to AI image tools in 2025; this measures reported losses, not adoption. (https://example.org/illustrators-circle-flash-poll)
+- **visual arts**: In a survey-based excerpt dated 2026-02-20 (sample unchecked), 71% of graphic design studios reported using AI image generation for concept work. (https://example.org/design-studio-pulse-2026)
+- **cross-sector**: In a peer-reviewed study dated 2026-03-15 (stratified random sample of 3,100 firms in 12 countries; extract states no limitations), generative AI adoption among creative small firms was 41% in 2025, up from 23% in 2023. (Halden-Rao-2026-Journal-of-Creative-Economies.pdf, p.112)
+- **cross-sector**: In a vendor benchmark dated 2026-06-01 by an AI image tool seller (opt-in poll of 640 of its own customers; vendor interest not disclosed), 78% of creative studios reported using generative AI every week. (BrightCanvas-Customer-Benchmark-2026.pdf, p.3)
+
+## Gaps
+- Games, advertising and design: both searches returned empty; no usable evidence exists in this research.
+- Legal and policy landscape: not established by this research (training-data lawsuits, licensing, legislation unresearched).
+- Film/TV labor (WGA/SAG-AFTRA terms, likeness rights, displacement): not established; searches timed out twice.
+- Music, writing, visual arts: royalties, lawsuits, displacement and income beyond small polls are largely unresearched; no measured economic impact at scale.
+- Conflict: 41% (any adoption, peer-reviewed, n=3,100) and 78% (weekly use, vendor opt-in, n=640) measure different things and populations; do not compare directly.
+- Conflict: 62% label production use vs 48% musician monthly composition/mixing, and 71% design concept work vs 78% weekly studio use, differ in unit, frequency, task and population.
+- Conflict: 37% illustrator commission losses measure reported losses, not adoption; the 11% income decline is self-reported and AI-attributed, with no link to measured earnings.
+- Sources: example.org URLs name no publisher; Halden-Rao title and authors are absent from the extract; PDF scope beyond adoption is unclear. Treat as unverified.
+
+Coverage: searched film, music, visual_arts, writing; never searched: none
+
+=== Coordinator ===
+Adoption of generative AI across creative industries is the best-documented finding, with figures ranging from 37% to 78% depending on sector and measure. Measured economic harm, legal outcomes, and film/TV labor effects remain largely unestablished, and games, advertising, and design returned no usable evidence.
+
+$ uv run test_research.py
+Scenario 1 · BEFORE the fix: the coordinator's first plan
+
+
+Coordinator turn 1: stop_reason=tool_use, 4 delegation(s)
+  -> search: 'Research subtask: AI in digital art creation, as part of the broader topic "Impact of AI o' (2 tool calls)
+       search_web({"query": "generative AI digital art creation artists survey adoption 2024 2025"}) ok
+       search_web({"query": "AI art copyright training data artists income market pricing report"}) ok
+  -> search: 'Research subtask: AI in graphic design, as part of the broader topic "Impact of AI on crea' (2 tool calls)
+       search_web({"query": "AI in graphic design survey adoption agencies in-house teams 2024 2025"}) ok
+       search_web({"query": "generative AI graphic designer jobs freelance demand report"}) ok
+  -> search: 'Research subtask: AI in photography, as part of the broader topic "Impact of AI on creativ' (2 tool calls)
+       search_web({"query": "AI in photography industry survey photographers income 2025"}) ok
+       search_web({"query": "AI generated images stock photography market authenticity disclosure"}) ok
   -> documents: 'Read both internal PDFs in full: (1) Halden-Rao-2026-Journal-of-Creative-Economies.pdf and' (2 tool calls)
        read_document({"name": "Halden-Rao-2026-Journal-of-Creative-Economies.pdf"}) ok
        read_document({"name": "BrightCanvas-Customer-Benchmark-2026.pdf"}) ok
   (4 subagent(s) in 10s)
 
 Coordinator turn 2: stop_reason=tool_use, 1 delegation(s)
-  -> synthesis: 'Combine the findings below into one JSON object for a report on "Impact of AI on creative ' (0 tool calls)
-  (1 subagent(s) in 10s)
+  -> synthesis: 'Combine the following subagent findings into one JSON object for a report on "Impact of AI' (0 tool calls)
+  (1 subagent(s) in 18s)
 
 Coordinator turn 3: stop_reason=tool_use, 1 delegation(s)
   -> report: 'Write the final cited report on "Impact of AI on creative industries" using ONLY the synth' (0 tool calls)
-  (1 subagent(s) in 9s)
-
-Coordinator turn 4: stop_reason=end_turn, 0 delegation(s)
-
-=== Report (report.md) ===
-# Impact of AI on Creative Industries: Evidence Summary
-
-This thin evidence base contains four usable sources, one of them peer-reviewed. Figures on illustrator commissions, graphic design studio use, and creative firm adoption are excerpts or survey results with limited methodology. A vendor benchmark is included but is unsupported as a general measure. The photography sub-topic has no usable findings. Digital art and graphic design findings partly overlap, and the two adoption figures measure different things and are not comparable.
-
-- **Digital art creation**: 37% of member illustrators surveyed lost at least one commission to AI image tools in 2025 (member trade-group flash poll, excerpt only; sample size and methodology not shown, so unverified). (https://example.org/illustrators-circle-flash-poll)
-- **Graphic design**: 71% of graphic design studios use AI image generation for concept work (industry report excerpt; survey type, sample size and methodology not shown, so unverified). (https://example.org/design-studio-pulse-2026)
-- **Creative industries (general)**: 41% of creative small firms adopted generative AI in 2025, up from 23% in 2023 (peer-reviewed stratified random survey of 3,100 firms in 12 countries; the trend is not confirmed as like-for-like). (Halden-Rao-2026-Journal-of-Creative-Economies.pdf, p.112)
-- **Creative industries (general)**: 78% of creative studios use generative AI every week (vendor opt-in poll of 640 customers of an AI image-tool seller, not peer-reviewed; measures weekly use rather than adoption, so unsupported as a general measure). (BrightCanvas-Customer-Benchmark-2026.pdf, p.3)
-
-## Gaps
-- Photography: no usable findings; both queries returned only off-topic illustration and design sources.
-- Digital art and graphic design: no copyright, platform, tool, income, job-demand, productivity, or academic/news findings; digital art search returned identical results for both queries.
-- Documents: only p.112 (Halden-Rao) and p.3 (BrightCanvas) were retrieved; full documents not confirmed read.
-- Halden-Rao lacks a definition of creative small firms, subsector breakdown, country list, survey instrument, and response rate.
-- BrightCanvas lacks question wording, response rate, studio definition, and any photography or graphic design breakdown.
-- Conflict: the 41% adoption figure and the 78% weekly-use figure measure different things and are not comparable.
-- Conflict: the 37% illustrator poll may not represent graphic designers; the 71% studio figure is an unverified excerpt; both are reported under digital art and graphic design.
-- Conflict: the 41% trend (23% in 2023 to 41% in 2025) may not be like-for-like because the two years may not sample the same firms.
-
-Coverage: searched visual_arts; never searched: film, music, writing
-
-=== Coordinator ===
-The research on AI's impact on creative industries is complete, but the evidence base is thin: only four usable sources, one of them peer-reviewed. The photography sub-topic returned no usable findings, and the digital art and graphic design findings are mostly unverified excerpts or vendor and trade-group polls. The final report is at the end of the report agent's output above, with its summary, findings, conflicts, and gaps.
-
-# Step 6: after the fix to rule 1
-$ uv run research.py "Impact of AI on creative industries"
-Coordinator rule 1: 1. Decompose the topic into the distinct sectors it spans before you split it. For creative industries, cover at
-   least music, writing, film and visual arts: one search subtask per sector. Breadth first: a narrow plan makes a narrow report.
-
-Coordinator turn 1: stop_reason=tool_use, 6 delegation(s)
-  -> search: 'Research the impact of AI on the MUSIC sector (2023-2026 where possible). Cover: generativ' (2 tool calls)
-       search_web({"query": "AI music sector survey 2025 generative music voice cloning licensing"}) ok
-       search_web({"query": "AI music streaming policy AI-generated tracks lawsuit settlement 2025"}) ok
-  -> search: 'Research the impact of AI on the WRITING sector: book publishing, journalism, copywriting,' (2 tool calls)
-       search_web({"query": "AI impact on writing sector book publishing journalism translation 2023-2026"}) ok
-       search_web({"query": "AI writing sector authors lawsuits settlements guild agreements"}) ok
-  -> search: 'Research the impact of AI on the FILM and TV sector (2023-2026 where possible). Cover: gen' (2 tool calls)
-       search_web({"query": "AI film and TV sector survey 2024 2025"}) ERROR timeout
-       search_web({"query": "Hollywood AI provisions WGA SAG-AFTRA digital replicas"}) ok
-  -> search: 'Research the impact of AI on the VISUAL ARTS sector (illustration, painting, photography, ' (2 tool calls)
-       search_web({"query": "AI impact on visual artists illustration photography survey income 2024 2025"}) ok
-       search_web({"query": "visual arts AI lawsuit Andersen v. Stability AI Getty Images status stock photo policy"}) ok
-  -> search: 'Research the impact of AI on adjacent creative industries: video games, advertising/market' (3 tool calls)
-       search_web({"query": "generative AI video game development survey layoffs SAG-AFTRA voice actors"}) ok
-       search_web({"query": "advertising agencies generative AI adoption survey jobs creative"}) ok
-       search_web({"query": "generative AI video games"}) ok
-  -> documents: 'Read both internal documents in full: (1) Halden-Rao-2026-Journal-of-Creative-Economies.pd' (2 tool calls)
-       read_document({"name": "Halden-Rao-2026-Journal-of-Creative-Economies.pdf"}) ok
-       read_document({"name": "BrightCanvas-Customer-Benchmark-2026.pdf"}) ok
-  (6 subagent(s) in 12s)
-
-Coordinator turn 2: stop_reason=tool_use, 1 delegation(s)
-  -> synthesis: 'Combine the findings below on the impact of AI on creative industries into one JSON object' (0 tool calls)
-  (1 subagent(s) in 10s)
-
-Coordinator turn 3: stop_reason=tool_use, 1 delegation(s)
-  -> report: 'Write the final cited report on the impact of AI on creative industries using ONLY the syn' (0 tool calls)
   (1 subagent(s) in 11s)
 
 Coordinator turn 4: stop_reason=end_turn, 0 delegation(s)
 
-=== Report (report.md) ===
-# Impact of AI on Creative Industries: Thin, Mostly Unverified Evidence
-
-The evidence base is thin: most sector figures are single unverified search excerpts with unknown samples. Only two cross-sector sources are substantive: a peer-reviewed study reporting 41% adoption among creative small firms and a vendor poll reporting 78% weekly use among creative studios. These conflict and cannot be reconciled. There are no findings for games, advertising, architecture or fashion design.
-
-- **Music**: 62% of surveyed independent labels used generative AI tools in music production during 2025 (survey; UNVERIFIED search excerpt, sample and methodology unknown). (https://example.org/northbridge-label-survey-2026)
-- **Music**: 48% of Session Players Guild members used AI tools for composition or mixing at least once a month (member poll; UNVERIFIED excerpt, sample size unknown). (https://example.org/session-players-guild-poll)
-- **Writing**: Median freelance copywriting income fell 11% year over year, and 6 in 10 respondents blamed AI drafting tools (income study; UNVERIFIED excerpt, sample and methodology not verified). (https://example.org/freelance-writers-collective-income)
-- **Writing**: 19 of 25 surveyed book publishers require authors to disclose AI assistance (policy tracker; UNVERIFIED, sample composition and definition of "AI assistance" not verified). (https://example.org/lanternhouse-ai-policy-tracker)
-- **Film and TV**: 44% of independent film productions used AI for VFX cleanup in 2025 (VFX survey; UNVERIFIED partial result from a timed-out search, author and full report not confirmed). (https://example.org/indie-screen-council-vfx)
-- **Visual Arts**: 37% of member illustrators lost at least one commission to AI image tools in 2025 (flash poll; UNVERIFIED excerpt, methodology and sample not shown). (https://example.org/illustrators-circle-flash-poll)
-- **Visual Arts**: 71% of graphic design studios use AI image generation for concept work (survey; UNVERIFIED, sample and methodology not shown). (https://example.org/design-studio-pulse-2026)
-- **Cross-sector (creative small firms)**: Generative AI adoption among creative small firms reached 41% in 2025, up from 23% in 2023 (peer-reviewed journal article; stratified random sample of 3,100 firms in 12 countries, no sector breakdown in the text returned). (Halden-Rao-2026-Journal-of-Creative-Economies.pdf, p.112)
-- **Cross-sector (creative studios)**: 78% of creative studios use generative AI every week (vendor benchmark, not peer-reviewed; opt-in poll of 640 customers of BrightCanvas, which sells AI image tools, self-selected and not representative). (BrightCanvas-Customer-Benchmark-2026.pdf, p.3)
-
-## Gaps
-- Conflict: Halden-Rao's 41% adoption (peer-reviewed, n=3,100) and BrightCanvas's 78% weekly use (vendor, n=640 opt-in) measure different things and populations, so they are unreconciled, not corroborating.
-- Conflict: the sector poll figures (62% labels, 71% design studios, 37% illustrators losing work) measure use, lost work and adoption on unverified excerpts, so they are not mutually consistent.
-- Music: nothing on voice cloning, likeness disputes, licensing or training-data lawsuits, streaming AI policies, royalties, or market data.
-- Writing and Film/TV: nothing on AI-generated book floods, union AI terms (2023 WGA/SAG-AFTRA), digital replicas, generative video tools, or market data.
-- Visual arts: no status for Andersen v. Stability AI or Getty Images v. Stability AI, opt-out systems, or artist income beyond the two polls.
-- Games, advertising, architecture and fashion design: no findings; games, advertising and AI layoffs returned nothing, and architecture and fashion design were never searched.
-- Documents returned only short single paragraphs; no source has a verified author; no verified market-size or revenue data exists.
-- Search budgets were exhausted (two calls per subagent), so many sub-topics were never retrieved.
-
-Coverage: searched film, music, visual_arts, writing; never searched: none
-
-=== Coordinator ===
-I researched the impact of AI on creative industries across music, writing, film/TV, visual arts, and games/advertising/design, but the evidence base is thin: most sector figures are single unverified search excerpts with unknown samples, and games, advertising, architecture and fashion design returned no findings. The only substantive cross-sector sources, a peer-reviewed study reporting 41% generative AI adoption among creative small firms and a vendor poll reporting 78% weekly use among creative studios, measure different things and cannot be reconciled. The report is ready in the team's output, but treat it as a scoping view that needs a second research pass before any firm conclusions.
-
-$ uv run test_research.py
-Run 1 · BEFORE the fix: the coordinator's narrow decomposition from the exam question
-
-
-Coordinator turn 1: stop_reason=tool_use, 4 delegation(s)
-  -> search: 'Research topic: Impact of AI on creative industries. Your subtask: AI in digital art creat' (2 tool calls)
-       search_web({"query": "generative AI digital art creation survey artists income 2024 2025"}) ok
-       search_web({"query": "AI art copyright lawsuit licensing digital artists 2025"}) ok
-  -> search: 'Research topic: Impact of AI on creative industries. Your subtask: AI in graphic design. F' (2 tool calls)
-       search_web({"query": "AI in graphic design industry survey 2025"}) ok
-       search_web({"query": "generative AI graphic designers freelance pricing demand 2024 2026"}) ok
-  -> search: 'Research topic: Impact of AI on creative industries. Your subtask: AI in photography. Find' (2 tool calls)
-       search_web({"query": "AI in photography professional photographers income demand 2024 2025"}) ok
-       search_web({"query": "AI photography disclosure policy contests news agencies copyright likeness"}) ok
-  -> documents: 'Read both internal documents in full: (1) Halden-Rao-2026-Journal-of-Creative-Economies.pd' (2 tool calls)
-       read_document({"name": "Halden-Rao-2026-Journal-of-Creative-Economies.pdf"}) ok
-       read_document({"name": "BrightCanvas-Customer-Benchmark-2026.pdf"}) ok
-  (4 subagent(s) in 8s)
-
-Coordinator turn 2: stop_reason=tool_use, 1 delegation(s)
-  -> synthesis: 'Combine the following subagent findings on the topic "Impact of AI on creative industries"' (0 tool calls)
-  (1 subagent(s) in 11s)
-
-Coordinator turn 3: stop_reason=tool_use, 1 delegation(s)
-  -> report: 'Write the final cited report on "Impact of AI on creative industries" using ONLY the synth' (0 tool calls)
-  (1 subagent(s) in 9s)
-
-Coordinator turn 4: stop_reason=end_turn, 0 delegation(s)
-
---- checks, run 1 (before the fix) ---
+--- checks, Scenario 1 (before the fix) ---
 PASS  every subagent completed: each returned its JSON and no tool call failed
 PASS  yet the coverage check flags music, writing and film as never searched
 
-Run 2 · AFTER the fix: rule 1 of the coordinator's system prompt covers every sector
+Scenario 2 · AFTER the fix: rule 1 of the coordinator's system prompt covers every sector
 
 
-Coordinator turn 1: stop_reason=tool_use, 6 delegation(s)
-  -> search: 'Sector: MUSIC. Research the impact of AI on the music industry (composition, production, r' (2 tool calls)
-       search_web({"query": "music industry AI impact report 2025"}) ok
-       search_web({"query": "AI music licensing lawsuit streaming royalties"}) ok
-  -> search: 'Sector: WRITING (books, journalism, scriptwriting, copywriting, translation). Research the' (2 tool calls)
-       search_web({"query": "AI impact on writers and publishing survey 2024 2025"}) ok
-       search_web({"query": "writing sector generative AI litigation authors union contract terms"}) ok
-  -> search: 'Sector: FILM and TELEVISION (screenwriting, VFX, previsualization, post-production, actors' (4 tool calls)
-       search_web({"query": "AI impact film and television industry labor agreements strikes studios 2023-2026"}) ERROR timeout
-       search_web({"query": "film TV AI production costs VFX post-production litigation survey 2025"}) ERROR timeout
-       search_web({"query": "AI impact film and television industry labor agreements strikes studios 2023-2026"}) ERROR timeout
-       search_web({"query": "film TV AI production costs VFX post-production litigation survey 2025"}) ERROR timeout
-  -> search: 'Sector: VISUAL ARTS and DESIGN (illustration, photography, fine art, graphic and advertisi' (3 tool calls)
-       search_web({"query": "AI image generators impact on visual artists and designers survey commissions copyright lawsuits"}) ok
-       search_web({"query": "visual arts AI art market prices illustration photography stock imagery licensing opt-out"}) ok
-       search_web({"query": "visual arts AI art market prices illustration photography stock imagery licensing opt-out"}) ok
-  -> search: 'Sector: CROSS-CUTTING policy and economics and video games. (a) Find cross-sector economic' (2 tool calls)
-       search_web({"query": "AI creative industries economic study employment output consumer demand"}) ok
-       search_web({"query": "AI in video games adoption labor survey"}) ok
-  -> documents: 'Read both internal PDFs in full: Halden-Rao-2026-Journal-of-Creative-Economies.pdf and Bri' (2 tool calls)
+Coordinator turn 1: stop_reason=tool_use, 5 delegation(s)
+  -> search: 'Research topic: Impact of AI on creative industries. Your sector: MUSIC. Find current evid' (2 tool calls)
+       search_web({"query": "generative AI music industry survey musicians income 2025"}) ok
+       search_web({"query": "AI music streaming platforms copyright licensing deals voice cloning 2025"}) ok
+  -> search: 'Research topic: Impact of AI on creative industries. Your sector: WRITING (books, journali' (2 tool calls)
+       search_web({"query": "generative AI impact on writers authors journalists translators survey 2024 2025"}) ok
+       search_web({"query": "AI copyright lawsuit authors publishers training data"}) ok
+  -> search: 'Research topic: Impact of AI on creative industries. Your sector: FILM AND TELEVISION (inc' (2 tool calls)
+       search_web({"query": "generative AI film and television production VFX animation survey 2025"}) ERROR timeout
+       search_web({"query": "film television AI actor likeness union contract guild negotiations 2024 2025"}) ERROR timeout
+  -> search: 'Research topic: Impact of AI on creative industries. Your sector: VISUAL ARTS AND DESIGN (' (2 tool calls)
+       search_web({"query": "generative AI impact on visual artists illustrators designers income jobs survey 2024 2025"}) ok
+       search_web({"query": "AI image generators copyright lawsuit artists training data Getty Stability Midjourney"}) ok
+  -> documents: 'Research topic: Impact of AI on creative industries. Read the two internal PDFs named exac' (2 tool calls)
        read_document({"name": "Halden-Rao-2026-Journal-of-Creative-Economies.pdf"}) ok
        read_document({"name": "BrightCanvas-Customer-Benchmark-2026.pdf"}) ok
-  (6 subagent(s) in 9s)
+  (5 subagent(s) in 7s)
 
-Coordinator turn 2: stop_reason=tool_use, 4 delegation(s)
-  -> search: 'Retry, narrower queries. Topic: FILM and TV and AI. Find 2023-2026 sources on: (1) the 202' (2 tool calls)
-       search_web({"query": "WGA 2023 contract artificial intelligence"}) ok
-       search_web({"query": "SAG-AFTRA AI provisions 2023"}) ok
-  -> search: 'Retry, narrower queries. Topic: AI COPYRIGHT LITIGATION affecting creative industries. Fin' (2 tool calls)
-       search_web({"query": "Andersen v. Stability AI"}) ok
-       search_web({"query": "Getty Images v. Stability AI"}) ok
-  -> search: 'Retry, narrower queries. Topic: AI in VIDEO GAMES and AI REGULATION for creative sectors. ' (2 tool calls)
-       search_web({"query": "game developers survey generative AI"}) ok
-       search_web({"query": "EU AI Act Article 50 transparency AI-generated content"}) ok
-  -> search: 'Retry, narrower queries. Topic: AI and CREATIVE ECONOMY ECONOMICS. Find 2023-2026 sources ' (2 tool calls)
-       search_web({"query": "WIPO UNESCO generative AI creative industries report"}) ok
-       search_web({"query": "generative AI freelance writers earnings Upwork Fiverr study"}) ok
-  (4 subagent(s) in 8s)
+Coordinator turn 2: stop_reason=tool_use, 1 delegation(s)
+  -> synthesis: 'Research topic: Impact of AI on creative industries. Combine the findings below into one s' (0 tool calls)
+  (1 subagent(s) in 12s)
 
 Coordinator turn 3: stop_reason=tool_use, 1 delegation(s)
-  -> synthesis: 'Combine the research findings below into one JSON synthesis on the topic "Impact of AI on ' (0 tool calls)
-  (1 subagent(s) in 15s)
+  -> report: 'Write the final cited report on: Impact of AI on creative industries. Use ONLY the synthes' (0 tool calls)
+  (1 subagent(s) in 13s)
 
-Coordinator turn 4: stop_reason=tool_use, 1 delegation(s)
-  -> report: 'Write the final cited report on "Impact of AI on creative industries" from the synthesis J' (0 tool calls)
-  (1 subagent(s) in 18s)
+Coordinator turn 4: stop_reason=end_turn, 0 delegation(s)
 
-Coordinator turn 5: stop_reason=end_turn, 0 delegation(s)
-
---- checks, run 2 (after the fix) ---
+--- checks, Scenario 2 (after the fix) ---
 PASS  a search ran for every sector: music, writing, film, visual arts
 PASS  two or more searches ran in parallel (same coordinator turn)
 PASS  every subagent used only its own tools
