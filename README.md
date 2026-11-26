@@ -7,13 +7,13 @@ Prepare for Anthropic's CCAR-F exam task statement by task statement: answer eac
 | Course code | `C437` |
 | Programme | Non-WSQ |
 | Duration | 2 days / 15 hours (9:30am – 5:30pm daily) |
-| Courseware release | Trainer slides v3.8, Lesson Plan v2.8, Learner Guide v2.8 (26 Nov 2026) |
+| Courseware release | Trainer slides v3.9, Lesson Plan v2.9, Learner Guide v2.9 (26 Nov 2026) |
 | Official exam guide | [Anthropic's CCAR-F Exam Guide v1.0 (PDF, 39 pages)](exam-guide/Claude-Certified-Architect-Foundations-Exam-Guide-v1.0.pdf) |
 | Exam-question labs | [Run all 30 labs live in your browser](https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/) |
 | Practice exam | [60 questions, scored by domain](https://exams.tertiaryinfotech.com/practice-exams/anthropic/anthropic-cca-foundations) |
 | Registration | [View course details and register](https://www.tertiarycourses.com.sg/claude-certified-architect-foundations-ccar-f-exam-prep.html) |
 
-![Cover slide of the C437 trainer slides v3.8](screenshot.png)
+![Cover slide of the C437 trainer slides v3.9](screenshot.png)
 
 ## The exam at a glance
 
@@ -35,7 +35,7 @@ The exam tests judgement more than recall. Most questions describe a system that
 
 ## How the course prepares you
 
-1. **Day 1: all 30 task statements, as exam questions.** Each lab on the [lab site](https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/) opens with a four-option question in the exam's style. You commit to an answer, then press **Simulate it live** and watch the scenario run on `claude-haiku-5-5`: the trap first, then the fix, with the code, the API requests and the outcome side by side. Nothing to install.
+1. **Day 1: all 30 task statements, as exam questions.** Topic 1 opens with Anthropic's [AI-native SDLC playbook](https://claude.com/resources/articles/the-ai-native-sdlc-playbook): six stages run as a loop, and every stage uses something you build in this course. Then Each lab on the [lab site](https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/) opens with a four-option question in the exam's style. You commit to an answer, then press **Simulate it live** and watch the scenario run on `claude-haiku-5-5`: the trap first, then the fix, with the code, the API requests and the outcome side by side. Nothing to install.
 2. **Day 2: build what the questions describe.** In Labs 31 to 35 you paste copy-ready prompts into your AI coding tool and build a customer resolution agent (Scenario 1) and a multi-agent research team (a coordinator and four subagents: Scenario 1 misses three sectors, you fix one rule of the coordinator's system prompt, Scenario 2 covers them all), so the loop, the MCP server and the hooks are things you have run, not terms you have memorised.
 3. **Practice exam.** The course ends with the [practice exam](https://exams.tertiaryinfotech.com/practice-exams/anthropic/anthropic-cca-foundations): 60 questions in Practice mode, then a review of your score by domain. Sit it again under timed conditions before the real exam.
 
@@ -190,9 +190,9 @@ Optional builds in curl, the Python SDK and Claude Code, for task statements you
 ## In this repository
 
 - [Anthropic's CCAR-F Exam Guide v1.0, PDF](exam-guide/Claude-Certified-Architect-Foundations-Exam-Guide-v1.0.pdf)
-- [Trainer slides, PowerPoint](courseware/C437-Claude-Certified-Architect-Foundations-CCAR-F-Trainer-Slides-v3.8.pptx) and [PDF](courseware/C437-Claude-Certified-Architect-Foundations-CCAR-F-Trainer-Slides-v3.8.pdf)
-- [Lesson Plan, Word](courseware/LP-Claude-Certified-Architect-Foundations-CCAR-F-v2.8.docx) and [PDF](courseware/LP-Claude-Certified-Architect-Foundations-CCAR-F-v2.8.pdf)
-- [Learner Guide, Word](courseware/LG-Claude-Certified-Architect-Foundations-CCAR-F-v2.8.docx), [PDF](courseware/LG-Claude-Certified-Architect-Foundations-CCAR-F-v2.8.pdf) and [Markdown](courseware/LG-Claude-Certified-Architect-Foundations-CCAR-F-v2.8.md)
+- [Trainer slides, PowerPoint](courseware/C437-Claude-Certified-Architect-Foundations-CCAR-F-Trainer-Slides-v3.9.pptx) and [PDF](courseware/C437-Claude-Certified-Architect-Foundations-CCAR-F-Trainer-Slides-v3.9.pdf)
+- [Lesson Plan, Word](courseware/LP-Claude-Certified-Architect-Foundations-CCAR-F-v2.9.docx) and [PDF](courseware/LP-Claude-Certified-Architect-Foundations-CCAR-F-v2.9.pdf)
+- [Learner Guide, Word](courseware/LG-Claude-Certified-Architect-Foundations-CCAR-F-v2.9.docx), [PDF](courseware/LG-Claude-Certified-Architect-Foundations-CCAR-F-v2.9.pdf) and [Markdown](courseware/LG-Claude-Certified-Architect-Foundations-CCAR-F-v2.9.md)
 - [The labs folder](labs/): 46 lab folders (30 Day 1, 5 Day 2, 11 optional code builds) and the six Python simulators
 - [`docs/`](docs/): the source of the [lab site](https://tertiarycourses.github.io/C437-Claude-Certified-Architect-Foundations-Certification/) (GitHub Pages)
 
