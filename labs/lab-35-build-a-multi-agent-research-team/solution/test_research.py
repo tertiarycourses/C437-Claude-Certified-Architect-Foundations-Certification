@@ -1,5 +1,6 @@
-"""Live tests for the research team: two real runs, ten checks on the recorded delegations and tool calls.
-Scenario 1 is the coordinator's first, narrow plan; Scenario 2 is the fixed coordinator.
+"""Live tests for the research team: two real runs on the fixed sample data (sources.json), so the checks are
+repeatable, and ten checks on the recorded delegations and tool calls.
+Scenario 1 is the exam scenario's narrow first plan (RULE_1_NARROW); Scenario 2 is the team's own rule 1.
 Run:  uv run test_research.py"""
 from research import run_research
 from research_tools import DATA
@@ -22,18 +23,18 @@ def cited(source):
     return next((u for u in URLS if u in source), None) or next((d for d in DOCS if d in source), None)
 
 
-print("Scenario 1 · BEFORE the fix: the coordinator's first plan\n")
-b = run_research(TOPIC, narrow=True)
-print("\n--- checks, Scenario 1 (before the fix) ---")
+print("Scenario 1 · the narrow first plan (RULE_1_NARROW) on the sample data\n")
+b = run_research(TOPIC, narrow=True, sample=True)
+print("\n--- checks, Scenario 1 (the narrow plan) ---")
 failed = [x["agent"] for x in b["delegations"] if x["json"] is None or any(c["is_error"] for c in x["calls"])]
 check("every subagent completed: each returned its JSON and no tool call failed", not failed, f"failed: {failed}")
 check("yet the coverage check flags music, writing and film as never searched",
       {"music", "writing", "film"} <= set(b["missing"]), f"never searched: {b['missing']}")
 
-print("\nScenario 2 · AFTER the fix: rule 1 of the coordinator's system prompt covers every sector\n")
-a = run_research(TOPIC)
+print("\nScenario 2 · the team's rule 1 on the same sample data\n")
+a = run_research(TOPIC, sample=True)
 d = a["delegations"]
-print("\n--- checks, Scenario 2 (after the fix) ---")
+print("\n--- checks, Scenario 2 (rule 1) ---")
 check("a search ran for every sector: music, writing, film, visual arts", not a["missing"], f"never searched: {a['missing']}")
 turns = [x["turn"] for x in d if x["agent"] == "search"]
 check("two or more searches ran in parallel (same coordinator turn)", any(turns.count(t) >= 2 for t in turns), f"turns {turns}")

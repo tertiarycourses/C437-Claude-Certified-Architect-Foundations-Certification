@@ -1,201 +1,329 @@
-# Live run of solution/ on 26 Nov 2026 (claude-haiku-5-5). Sources are a fictional sandbox. Your wording will differ.
+# Live runs of solution/ on 27 Nov 2026 (claude-haiku-5-5 with Claude's web search). Web results change from run to run; your wording and sources will differ.
 
 $ uv run check_tools.py
 search_web({"query": "AI in music production"}) is_error=False -> {"query": "AI in music production", "sector": "music", "results": [{"url": "https://example.org/northbridge-label-survey-2026", "title": "Northbridge Label Survey 2026", "published": "2026-03-19", "excerpt": "62% of surveyed independent labels used generative AI tools in music production during 2025."}, {"url": "https://example.org/session-players-guild-poll", "title": "Session Players Guild member poll", "published": "2025-09-02", "excerpt": "48% of member musicians used AI tools for composition or mixing at least once a month."}]}
 search_web({"query": "AI in film production"}) is_error=True -> {"errorCategory": "timeout", "isRetryable": false, "message": "search timed out for 'AI in film production'", "sector": "film", "attempted_query": "AI in film production", "partial_results": [{"url": "https://example.org/indie-screen-council-vfx", "title": "Indie Screen Council VFX survey", "published": "2026-06-08", "excerpt": "44% of independent film productions used AI for visual-effects cleanup in 2025."}]}
 read_document({"name": "BrightCanvas-Customer-Benchmark-2026.pdf"}) is_error=False -> {"name": "BrightCanvas-Customer-Benchmark-2026.pdf", "kind": "vendor benchmark", "page": 3, "published": "2026-06-01", "text": "78% of creative studios use generative AI every week. Method: opt-in poll of 640 customers of BrightCanvas, which sells AI image tools."}
 sector_of("AI in graphic design") -> visual_arts
+your documents in docs/: []
 
-$ uv run agents.py search "Research how AI is affecting the film sector."
-  search_web({'query': 'AI impact on film sector surveys reports'}) -> ERROR {"errorCategory": "timeout", "isRetryable": false, "message": "search timed out for 'AI impact on film sector surveys reports'", "sector": "film", "attempted_qu
-  search_web({'query': 'film industry AI report'}) -> ERROR {"errorCategory": "timeout", "isRetryable": false, "message": "search timed out for 'film industry AI report'", "sector": "film", "attempted_query": "film indus
-{"sector": "film", "findings": [{"claim": "44% of independent film productions used AI for visual-effects cleanup in 2025.", "source_url": "https://example.org/indie-screen-council-vfx", "source_title": "Indie Screen Council VFX survey", "published": "2026-06-08"}], "gaps": ["Query 'AI impact on film sector surveys reports' timed out (errorCategory: timeout, not retryable); only partial result returned, the Indie Screen Council VFX survey excerpt listed above.", "Query 'film industry AI report' also timed out (errorCategory: timeout, not retryable); it returned the same single partial result and no new findings.", "No further sources were obtained on AI's broader effects on film (e.g., production workflows, labor, scripting, distribution, or regulation), because the two-search limit was reached after both calls failed."]}
+$ uv run agents.py search "Research how AI is changing medical imaging."
+  web_search({"query": "AI medical imaging radiology 2026"}) -> {"query": "AI medical imaging radiology 2026", "results": [{"url": "https://pinggy.io/blog/ai_medical_imaging_diagnostics_2026/", "title": "AI Medical Imaging i
+  web_search({"query": "FDA authorized AI medical imaging devices list"}) -> {"query": "FDA authorized AI medical imaging devices list", "results": [{"url": "https://www.fda.gov/medical-devices/artificial-intelligence-enabled-medical-dev
+{"area": "How AI is changing medical imaging", "findings": [{"claim": "Radiology accounts for roughly three-quarters of the roughly 1,400 AI-enabled medical devices the FDA had cleared as of early 2026, making it the field's main hotspot for AI.", "source_url": "https://knowablemagazine.org/content/article/health-disease/2026/ai-wont-replace-radiologists-but-will-change-their-jobs", "source_title": "AI won't replace radiologists, but will dramatically change their jobs", "published": "unknown"}, {"claim": "Radiologists' role is shifting toward reviewing each AI output and catching the rare cases where the algorithm errs, since AI is still more error-prone than a skilled radiologist in some cases.", "source_url": "https://knowablemagazine.org/content/article/health-disease/2026/ai-wont-replace-radiologists-but-will-change-their-jobs", "source_title": "AI won't replace radiologists, but will dramatically change their jobs", "published": "unknown"}, {"claim": "A 2026 ACR/RBMA workforce survey found that 89% of respondents familiar with their organizations' AI use reported their practices had deployed AI in some capacity, up from 46% in 2023.", "source_url": "https://sjsm.org/blog/will-ai-replace-radiologists/", "source_title": "Will AI Replace Radiologists? The Future of Radiology in 2026 and Beyond", "published": "unknown"}, {"claim": "In January 2026 the FDA cleared Aidoc's multi-condition AI triage tool for body CT, which flags several critical findings from one scan and reorders the radiologist's worklist accordingly.", "source_url": "https://www.fornexhealth.com/blogs/ai-in-radiology-2026", "source_title": "AI in Radiology 2026: What Hospitals Need to Know", "published": "unknown"}], "gaps": ["The FDA AI-enabled device list pages retrieved show a partial, non-comprehensive list and no aggregate radiology count, so exact current totals rely on secondary sources.", "No peer-reviewed diagnostic accuracy studies or meta-analyses on AI in imaging were retrieved; the accuracy figures found came from unreliable marketing blogs and were excluded.", "The claim that LLMs draft radiology reports comparable to human reports appeared only in a secondary blog without a verifiable primary study, so it was excluded.", "Most retrieved sources are blogs or secondary sites with relative dates ('X days ago') rather than absolute publication dates."]}
 
-# Step 5 · Scenario 1: the coordinator's first plan (solution/ has the fix, so this replays the old rule with --narrow)
-$ uv run research.py "Impact of AI on creative industries" --narrow
-Coordinator rule 1: 1. Decompose the topic into three search subtasks: AI in digital art creation; AI in graphic design; AI in photography.
+# Step 5 · Research anything
+$ uv run research.py "AI impact on the healthcare industry"
+Topic: AI impact on the healthcare industry
+Your documents in docs/: none
+
+Coordinator turn 1: stop_reason=tool_use, 6 delegation(s)
+  -> search: 'Research topic: AI impact on the healthcare industry. Your sub-area: CLINICAL DIAGNOSTICS ' (2 tool calls)
+       web_search({"query": "FDA AI-enabled medical devices list total authorized radiology"}) ok
+       web_search({"query": "AI diagnostic imaging study accuracy limitations bias hospital adoption"}) ok
+  -> search: 'Research topic: AI impact on the healthcare industry. Your sub-area: PHARMA AND DRUG DISCO' (2 tool calls)
+       web_search({"query": "AI-discovered drugs clinical trial success rate Phase 1 analysis"}) ok
+       web_search({"query": "AI-discovered drug Phase 3 milestone 2026"}) ok
+  -> search: 'Research topic: AI impact on the healthcare industry. Your sub-area: ADMINISTRATION, REVEN' (2 tool calls)
+       web_search({"query": "AI prior authorization regulation insurers 2026"}) ok
+       web_search({"query": "AI medical coding billing denial management savings study"}) ok
+  -> search: 'Research topic: AI impact on the healthcare industry. Your sub-area: CLINICAL DOCUMENTATIO' (2 tool calls)
+       web_search({"query": "ambient AI scribe randomized trial burnout documentation time"}) ok
+       web_search({"query": "physician survey ambient AI scribe adoption 2026"}) ok
+  -> search: 'Research topic: AI impact on the healthcare industry. Your sub-area: REGULATION, SAFETY, L' (2 tool calls)
+       web_search({"query": "FDA AI-enabled medical devices guidance predetermined change control plan"}) ok
+       web_search({"query": "EU AI Act high-risk medical devices obligations timeline"}) ok
+  -> search: 'Research topic: AI impact on the healthcare industry. Your sub-area: INVESTMENT, MARKET SI' (2 tool calls)
+       web_search({"query": "Rock Health healthcare AI venture funding report"}) ok
+       web_search({"query": "health systems AI adoption survey 2026"}) ok
+  (6 subagent(s) in 14s)
+
+Coordinator turn 2: stop_reason=tool_use, 1 delegation(s)
+  -> synthesis: 'Research topic: AI impact on the healthcare industry. Below are findings from six search s' (0 tool calls)
+  (1 subagent(s) in 29s)
+
+Coordinator turn 3: stop_reason=tool_use, 1 delegation(s)
+  -> synthesis: 'Research topic: AI impact on the healthcare industry. Combine the findings below into ONE ' (0 tool calls)
+  (1 subagent(s) in 19s)
+
+Coordinator turn 4: stop_reason=tool_use, 1 delegation(s)
+  -> report: 'Write the final cited report on: AI impact on the healthcare industry. Use ONLY the synthe' (0 tool calls)
+  (1 subagent(s) in 27s)
+
+Coordinator turn 5: stop_reason=end_turn, 0 delegation(s)
+
+=== Report (report.md) ===
+# AI Impact on the Healthcare Industry: Cited Evidence Report
+
+Evidence on AI in healthcare is growing but largely vendor, secondary or undated. Radiology AI shows accuracy drops on external data, and scribe RCTs show modest burnout and workload gains. Early AI-discovered drugs report Phase I success but no approvals. Payer AI rules are active, with unverified claims of denial reductions. Funding and adoption are rising, but the measures differ. Patient-facing AI, liability, WHO guidance, nursing workforce and market forecasts were not covered.
+
+- **clinical diagnostics**: A third-party tracker (unverified, not checked against FDA) reports about 1,614 FDA AI-enabled device authorizations through June 2026, about 1,230 radiology-led and 154 cardiovascular. (https://www.arca.inc/tools/ai-device-search)
+- **clinical diagnostics**: A peer-reviewed systematic review reports radiology AI loses accuracy on external data, with the largest drops often in specificity (false-positive risk), though no figures are given in the synthesis. (https://doi.org/10.1097/MS9.0000000000004166)
+- **clinical diagnostics**: A peer-reviewed narrative review (weaker evidence than a systematic review) reports vision-language models are less accurate on images from Black and female patients, with no figures given. (https://link.springer.com/article/10.1186/s44398-025-00020-7)
+- **clinical diagnostics**: A secondary review posted on ResearchGate (publication status unconfirmed) reports strong academic model accuracy alongside low clinical adoption, with no figures given. (https://www.researchgate.net/publication/411043887_Artificial_Intelligence_in_Diagnostic_Radiology_Current_Applications_Clinical_Impact_and_Future_Perspectives)
+- **drug discovery and trials**: A peer-reviewed analysis from a limited sample (includes BCG researchers) reports about 80–90% Phase I and about 40% Phase II success for AI-discovered molecules, comparable to historic averages. (https://www.sciencedirect.com/science/article/pii/S135964462400134X)
+- **drug discovery and trials**: A secondary/vendor citation of Oliver Wyman June 2026 figures reports 118 AI-native Phase I programs since 2016, with 73% (38/52) advancing to Phase II and 41% (9/22) advancing from Phase II. (https://axis-intelligence.com/ai-drug-discovery-statistics)
+- **drug discovery and trials**: A secondary/vendor news report states Insilico's rentosertib entered Phase III (announced July 7, 2026), with the first patient dosed on September 9, 2026. (https://allsci.com/news/clinical-trials/ai-drug-phase-iii-ipf-trial-insilico-advances/)
+- **drug discovery and trials**: An unverified source reports about $60B invested in AI drug discovery since 2019, about 175 clinical-stage programs, and no AI-discovered drug approved yet. (https://intuitionlabs.ai/articles/ai-discovered-drugs-clinical-trials-2026)
+- **administration and payers**: A secondary law-firm review (date inferred from URL) reports multiple US states passed 2026 laws on insurer AI in prior authorization and claims, covering transparency and human oversight of adverse determinations, with no count given. (https://www.hklaw.com/en/insights/publications/2026/05/states-continue-efforts-to-regulate-ai-in-healthcare)
+- **administration and payers**: A vendor blog (not checked against CMS text) reports the CMS-0057-F prior authorization rule took effect January 1, 2026 for MA, Medicaid, CHIP and ACA plans, with a FHIR prior authorization API required from January 1, 2027. (https://www.getprosper.ai/blog/ai-prior-authorization-risks-rules-roi)
+- **administration and payers**: A vendor blog reports, secondhand from a 2024 AMA survey, that 61% of physicians feared payer AI would increase denials, a perception measure rather than actual denial data. (https://getperspective.ai/blog/health-insurance-ai-in-2026-member-engagement-claims-and-the-compliance-reality)
+- **administration and payers**: A single-site vendor case study reports one cardiology group's denial write-offs fell from $340K to $52K in four months after adopting an AI tool. (https://www.revenuesynergy.com/blog/ai-denial-prediction.html)
+- **clinical documentation and workforce**: A peer-reviewed three-arm RCT of 238 outpatient physicians (Nov 4, 2024–Jan 3, 2025) reports Nabla cut documentation time and scribe use was linked to modest gains in burnout and task load versus usual care. (https://pmc.ncbi.nlm.nih.gov/articles/PMC12265753/)
+- **clinical documentation and workforce**: The same peer-reviewed RCT (PubMed record) reports occasional scribe inaccuracies require physician vigilance, with a similar pattern across vendors. (https://pubmed.ncbi.nlm.nih.gov/40672471/)
+- **clinical documentation and workforce**: A vendor-affiliated survey (n=3,151, January 2026) reports 29% of US physicians used voice documentation or scribes, up from 20% in spring 2025. (https://www.doximity.com/reports/state-of-ai-medicine-report/2026)
+- **clinical documentation and workforce**: Trade press reports a JAMA Network Open study (January 2026; 1.2M+ encounters, 1,565 physicians; paper not retrieved) finding AI-scribe adopters had about 1.81 more RVUs and about 1 more patient per week, with no rise in denials. (https://www.medicaleconomics.com/view/take-note-the-ai-scribe-era-is-here)
+- **regulation and governance**: FDA final guidance (Docket FDA-2022-D-2628) states a predetermined change control plan describes pre-specified modifications, so those changes need no new submission; its date is unresolved (August 2025 header vs December 3, 2024 per a law firm). (https://www.fda.gov/regulatory-information/search-fda-guidance-documents/marketing-submission-recommendations-predetermined-change-control-plan-artificial-intelligence)
+- **regulation and governance**: An unverified, non-peer-reviewed preprint reports that as of September 2024 only 1.9% of AI/ML devices had an authorized PCCP, and all 26 were class II. (https://www.medrxiv.org/content/10.1101/2025.08.26.25334477.full.pdf)
+- **regulation and governance**: A secondary/vendor report states Regulation (EU) 2026/1744 postpones high-risk obligations for medical-device AI (Annex I) to 2 August 2028 and standalone Annex III obligations to 2 December 2027; the Official Journal text was not checked. (https://medicaltradejournal.com/eu-ai-act-medical-devices-deadline-2028/)
+- **investment and adoption**: An industry funding tracker reports US digital health startups raised $14.2B in 2025, with AI-enabled firms taking 54% of funding, up from 37% in 2024. (https://rockhealth.com/insights/2025-year-end-digital-health-funding-overview-a-tale-of-two-markets/)
+- **investment and adoption**: A secondary/vendor report states US digital health venture funding reached $7.4B in H1 2026, and also says Rock Health dropped its AI-enabled label, which is not confirmed at the source. (https://www.marketscale.com/industries/healthcare/rock-health-74b-went-into-digital-health-in-h1-2026-and-20-rounds-took-45)
+- **investment and adoption**: A company survey of 120 US health system executives reports 75% using or planning AI in 2026, up from 59%, where the headline includes planned as well as current use. (https://elicitinginsights.com/news/health-systems-accelerate-ai-adoption-with-67-increase-in-multi-solution-deployment-2026/)
+- **investment and adoption**: Trade press reports the same survey's finding that more than half of systems able to quantify returns reported at least 2x ROI, with mixed adoption experiences. (https://www.fiercehealthcare.com/ai-and-machine-learning/75-us-healthcare-systems-use-plan-use-ai-platform-2026)
+
+## Gaps
+- Not covered: patient-facing AI, liability, WHO guidance, nursing workforce and market size forecasts; none were found in any search.
+- Source quality: many sources are vendor, secondary or undated; treat all figures as provisional until checked against primary sources.
+- Clinical gaps: no CE-marked device count, specialty breakdowns, outcome studies, false-positive rates or hospital adoption rates.
+- Investment gaps: no primary sources; AlphaFold, Recursion and Isomorphic status, and trial recruitment, are absent.
+- Payer gaps: no verified denial lawsuits or peer-reviewed ROI; the WISeR pilot is only mentioned.
+- Conflict: FDA PCCP guidance date (August 2025 header vs December 3, 2024 per law firm) is unresolved.
+- Conflict: drug success rates differ by sample and definition, and Isomorphic funding figures conflict; both unresolved.
+- Conflict: Rock Health label change is unconfirmed; funding share and adoption share are not comparable; AMA perception conflicts with JAMA claims data.
+
+Coverage: searched ADMINISTRATION, REVENUE CYCLE, PRIOR AUTHORIZATION AND PAYERS; AI impact on healthcare: investment, market size, health system economics and patient-facing AI; AI impact on healthcare: pharma and drug discovery / clinical trials; Clinical diagnostics and medical imaging (radiology, pathology, cardiology, dermatology, ophthalmology AI tools); Clinical documentation, ambient AI scribes, clinician workforce and burnout; Regulation, safety, liability and governance of AI in healthcare. Found nothing for: none
+
+=== Coordinator ===
+The team's cited report covers AI in healthcare across diagnostics, drug discovery, payers, clinical documentation, regulation, and investment. Most evidence is vendor, secondary, or undated, and the report is thin on patient-facing AI, liability, WHO guidance, nursing workforce, and market forecasts, which no search covered. The first synthesis was cut off, so I re-ran it once, and the report is a structured summary with findings, conflicts, and gaps rather than full narrative prose.
+
+# Step 5 · Your own topic
+$ uv run research.py "Market research on one-person companies"
+Topic: Market research on one-person companies
+Your documents in docs/: none
+
+Coordinator turn 1: stop_reason=tool_use, 6 delegation(s)
+  -> search: 'Research area: MARKET SIZE AND GROWTH of one-person companies (solo founders, sole proprie' (2 tool calls)
+       web_search({"query": "Census Bureau nonemployer statistics number of businesses latest year"}) ok
+       web_search({"query": "one-person businesses number Japan China Europe statistics"}) ok
+  -> search: 'Research area: DEMOGRAPHICS AND MOTIVATIONS of one-person company founders. Who runs them ' (2 tool calls)
+       web_search({"query": "MBO Partners State of Independence report solo entrepreneurs demographics motivations"}) ok
+       web_search({"query": "one-person businesses solo founders survey age education motivations study"}) ok
+  -> search: 'Research area: SOFTWARE, TOOLS AND SERVICES MARKET serving one-person companies (accountin' (2 tool calls)
+       web_search({"query": "solopreneur tools market size one-person companies software"}) ok
+       web_search({"query": "micro-business software market size report 2026"}) ok
+  -> search: 'Research area: FINANCING, REVENUE AND PROFITABILITY of one-person companies. Cover how sol' (2 tool calls)
+       web_search({"query": "nonemployer firms statistics SBA Office of Advocacy"}) ok
+       web_search({"query": "Federal Reserve Small Business Credit Survey nonemployer financing"}) ok
+  -> search: 'Research area: LEGAL FRAMEWORKS AND POLICY for one-person companies. Compare how jurisdict' (2 tool calls)
+       web_search({"query": "Japan one-person corporation ichinin hojin growth 2025"}) ok
+       web_search({"query": "China one-person limited liability company Company Law single shareholder"}) ok
+  -> search: "Research area: AI AND TECHNOLOGY IMPACT on one-person companies, including the 'one-person" (2 tool calls)
+       web_search({"query": "one-person unicorn AI solo founder revenue"}) ok
+       web_search({"query": "solo founders freelancers AI adoption survey"}) ok
+  (6 subagent(s) in 15s)
+
+Coordinator turn 2: stop_reason=tool_use, 1 delegation(s)
+  -> synthesis: 'Combine the research findings below on MARKET RESEARCH ON ONE-PERSON COMPANIES into a sing' (0 tool calls)
+  (1 subagent(s) in 27s)
+
+Coordinator turn 3: stop_reason=tool_use, 1 delegation(s)
+  -> report: 'Write the final cited market research report on ONE-PERSON COMPANIES from the synthesis be' (0 tool calls)
+  (1 subagent(s) in 24s)
+
+Coordinator turn 4: stop_reason=end_turn, 0 delegation(s)
+
+=== Report (report.md) ===
+# Market Research Report: One-Person Companies (Limited Evidence Base)
+
+Sources on one-person companies are thin and mostly self-reported or unverified. US Census proxies show about 30.4M nonemployer establishments in 2023, while China reports over 16M one-person LLCs (secondary citation). Software market estimates range from $67.6B to $250B. About half of US nonemployer firms carry no debt. China is the only jurisdiction with legal coverage. Official data is thin outside the US and China, and no growth series exists for 2015-2025.
+
+- **Market size and growth**: US Census nonemployer statistics show 30,427,808 nonemployer establishments in 2023, about 78.4% of all US establishments (official statistic; a proxy for solo businesses, not identical to sole proprietors). (https://www.census.gov/library/stories/2026/05/small-business-week.html)
+- **Market size and growth**: Almost 25 million nonemployer businesses existed in 2016, more than 76.2% of all US businesses (official statistic). (https://census.gov/library/stories/2019/03/what-is-a-business.html)
+- **Market size and growth**: Over 16 million one-person limited liability companies existed as of June 2025, 27.4% of all enterprises in China (secondary citation of the OPC Development Trend Report; OPCs only). (https://baike.baidu.com/en/item/One%20Person%20Company/4618225)
+- **Market size and growth**: Private enterprises in China exceeded 57 million by end-March 2025, 92.3% of all businesses (secondary citation of SAMR data; a broad category that is not limited to one-person firms). (https://webiano.digital/chinas-rise-of-one-person-firms-tests-europes-slow-business-model/)
+- **Demographics and motivations**: 84% of full-time independents say they are happier working alone, while only 52% say they make more money (vendor-commissioned, self-reported MBO Partners 2024 survey; 'independents' is broader than solo founders). (https://www.mbopartners.com/state-of-independence/2024-report)
+- **Demographics and motivations**: Solopreneurs cite control (63%), flexibility (61%) and autonomy (57%) as reasons for independence, and 58% of side-giggers supplement income (vendor-commissioned, self-reported MBO 'Shades of Independence' data). (https://www.newswise.com/articles/shades-of-independence-the-story-of-america-s-solopreneurs-side-giggers)
+- **Demographics and motivations**: Almost half of a Madrid-area solo-entrepreneur sample is aged 30-39 and 62% have higher education (secondary citation; small single-region sample). (https://www.researchgate.net/publication/290955561_Solo-entrepreneurs_and_Motivation_of_Business_Development_in_Technology_Industry)
+- **Software, tools and services market**: Global small business accounting software was about $6.50B in 2025, forecast at $11.51B by 2032 (8.5% CAGR), with micro-businesses about 45.5% of 2025 value (unverified blog estimate). (https://pmarketresearch.com/worldwide-small-business-accounting-software-market-research/)
+- **Software, tools and services market**: The broader SMB software market was about $72.35B in 2025, with a 6.88% CAGR to 2031 (vendor-commissioned, self-reported Mordor Intelligence estimate). (https://www.mordorintelligence.com/industry-reports/smb-software-market)
+- **Software, tools and services market**: The US had 41.8 million solopreneurs in 2026 (unverified blog estimate, not traced to an official statistic). (https://www.apexbusinesstech.com/solopreneur-tech-stack-2026-tools-one-person-business/)
+- **Financing, revenue and profitability**: Nonemployer firms make up 82.3% of US firms, or 29,811,495 firms (official SBA Office of Advocacy statistic, 2026 inferred). (https://advocacy.sba.gov/wp-content/uploads/2026/02/FINAL_FAQsAboutSmallBusiness_2026_012826.pdf)
+- **Financing, revenue and profitability**: About half of nonemployer firms carry no debt, and 31% do not regularly use external financing (vendor-commissioned, self-reported Fed Small Business Credit Survey, 2025 data). (https://www.fedsmallbusiness.org/reports/survey/2026/2026-report-on-nonemployer-firms)
+- **Financing, revenue and profitability**: In 2017 survey data, 71% of nonemployer firms had $100,000 or less in annual revenue and only 25% applied for financing (self-reported Federal Reserve data via New York Fed news item; no revenue data beyond this band). (https://www.newyorkfed.org/newsevents/news/regional_outreach/2018/an181212)
+- **Legal frameworks and policy**: China's 2018 Company Law (Art. 58) allows each natural person to found only one one-person LLC, which may not found another (secondary citation). (https://www.registrationchina.com/articles/law/china-company-law/)
+- **AI and technology impact**: Medvi, a single-founder AI-assisted company, reportedly had about $401M in first full-year sales and a 16.2% net margin, unaudited and attributed to a NYT report (secondary citation). (https://www.pymnts.com/artificial-intelligence-2/2026/the-one-person-billion-dollar-company-is-here/)
+- **AI and technology impact**: UK official data show 28% of businesses with 0-9 employees use at least one AI technology versus 49% of those with 250+ employees (secondary citation, paired with a study of 50 founders and freelancers). (https://elitebusinessmagazine.co.uk/analysis/item/could-solo-entrepreneurs-fall-behind-on-ai)
+- **AI and technology impact**: 86% of 500 surveyed solopreneurs reach for an AI tool before paying a person (vendor-commissioned, self-reported FreshBooks/Wakefield survey, June-July 2026; does not measure revenue). (https://www.selfemployed.com/news/freshbooks-solopreneur-ai-before-hiring-2026/)
+- **AI and technology impact**: Zero rigorous controlled surveys were found isolating AI as the cause of solo-founder revenue growth (unverified blog review). (https://futurewarns.com/one-person-businesses-using-ai-2026/)
+
+## Gaps
+- Conflict: US solopreneur headcount is 41.8M (Apex Business Tech) vs 29.8M (AI Discovery Lab) in 2026; neither traces to an official statistic.
+- Conflict: SMB software market estimates range from $67.6B to $250B across firms for 2025-era figures; not reconciled.
+- Conflict: nonemployer counts are a proxy and not sole proprietors; China's 16M one-person LLCs and 57M private enterprises cover different scopes.
+- Excluded: US 2024 nonemployer count of 31,985,874 is unconfirmed (bebop.ai only); do not use.
+- AI unverified: Pieter Levels revenue (only a blog citing about $3M ARR); Acquire.com, Starter Story and Stripe's $1M+ solo-operator claim unchecked; Upwork AI data not retrieved.
+- Not searched or not accessed: Stanford, MIT, Microsoft, Carta, Bain, McKinsey, a16z; Medvi NYT original; Amodei/Altman predictions (blogs only); Gusto figures (3.6%, 64%) via aggregator only.
+- Overall: official data thin outside US and China; no 2015-2025 growth series; no verified revenue or earnings distribution (BLS not retrieved); no Kauffman or Carta data; EU, UK and Japan counts missing.
+- Legal coverage missing for Japan, US, UK, EU, South Korea and Singapore; China 2023 revision not retrieved; 100,000 yuan minimum capital (Art. 59, older translations) unresolved.
+
+Coverage: searched AI and technology impact on one-person companies: revenue per founder, viable solo business size, one-person unicorn narrative; DEMOGRAPHICS AND MOTIVATIONS of one-person company founders; FINANCING, REVENUE AND PROFITABILITY of one-person companies (nonemployer firms); Legal frameworks and policy for one-person companies: China (partial); Japan, US, UK, EU, South Korea and Singapore not researched; Market size and growth of one-person companies (solo founders, sole proprietors, single-employee businesses): worldwide, US, UK, EU, Japan, China; SOFTWARE, TOOLS AND SERVICES MARKET serving one-person companies (solopreneur / micro-business software). Found nothing for: none
+
+=== Coordinator ===
+The research team produced a report on one-person companies, but the evidence base is thin: most figures are secondary, vendor-commissioned or unverified, and official data covers only the US and China. The report's headline numbers are about 30.4 million US nonemployer establishments in 2023 (Census) and over 16 million one-person LLCs in China as of June 2025 (secondary citation), and it flags that there is no 2015–2025 growth series, no verified earnings data, and no legal coverage beyond China.
+
+# Step 5 · Your own documents: docs/my-business-notes.md (a fictional one-person bookkeeping business)
+$ uv run research.py "Should my one-person bookkeeping business adopt AI tools?"
+Topic: Should my one-person bookkeeping business adopt AI tools?
+Your documents in docs/: my-business-notes.md
+
+Coordinator turn 1: stop_reason=tool_use, 6 delegation(s)
+  -> search: 'Search the web for the current (2024-2025) landscape of AI tools for bookkeeping and accou' (2 tool calls)
+       web_search({"query": "AI bookkeeping tools transaction categorisation accuracy pricing 2025"}) ok
+       web_search({"query": "Dext receipt extraction pricing solo bookkeeper 2025"}) ok
+  -> search: 'Search the web for evidence on the accuracy and error risk of AI in bookkeeping and accoun' (2 tool calls)
+       web_search({"query": "AI bookkeeping accuracy benchmark study accountants errors"}) ok
+       web_search({"query": "LLM tax questions accuracy evaluation study"}) ok
+  -> search: 'Search the web for professional and regulatory guidance on bookkeepers and accountants usi' (2 tool calls)
+       web_search({"query": "AICPA CPA professional ethics generative AI guidance accountants 2025"}) ok
+       web_search({"query": "IFAC ICAEW ACCA CPA Australia AI guidance accountants tax practitioners 2025"}) ok
+  -> search: 'Search the web for data privacy and security risks of using AI tools with client financial' (2 tool calls)
+       web_search({"query": "ChatGPT Claude Gemini train on user data default business enterprise tiers"}) ok
+       web_search({"query": "AI tool data breach accounting software vendor incident 2026"}) ok
+  -> search: 'Search the web for the business case of AI adoption for small solo bookkeeping and account' (2 tool calls)
+       web_search({"query": "AI adoption survey small accounting firms bookkeepers time savings"}) ok
+       web_search({"query": "accounting firm AI pricing fixed fee value pricing survey 2026"}) ok
+  -> documents: "Read the document named my-business-notes.md and extract every fact about the user's bookk" (1 tool calls)
+       read_document({"name": "my-business-notes.md"}) ok
+  (6 subagent(s) in 16s)
+
+Coordinator turn 2: stop_reason=tool_use, 1 delegation(s)
+  -> synthesis: 'Combine the findings below from six research subagents into one synthesis JSON for a repor' (0 tool calls)
+  (1 subagent(s) in 26s)
+
+Coordinator turn 3: stop_reason=tool_use, 1 delegation(s)
+  -> report: 'Write the final cited report answering: "Should my one-person bookkeeping business adopt A' (0 tool calls)
+  (1 subagent(s) in 17s)
+
+Coordinator turn 4: stop_reason=end_turn, 0 delegation(s)
+  provenance check: dropped 'Xero Early at $27/mo or QuickBooks Simple Start at $38/mo is' (source: 'https://dev.to/paullovelace/ai-accounting-for-small-business-in-2026-what-actual')
+
+=== Report (report.md) ===
+# Should a One-Person Bookkeeping Business Adopt AI Tools? Evidence Review and Recommendation
+
+Recommendation: run a limited, supervised pilot of AI for data capture and categorisation, not full adoption. Evidence is low to medium confidence: mostly vendor-linked, secondary, and not Singapore-specific or solo-specific. Your notes are headed 'fictional example', so confirm the figures are yours. Full adoption is justified if the pilot shows acceptable accuracy and hours saved on your real data, PDPA and vendor data terms are cleared, and a single-user price fits.
+
+- **User context**: Your notes report 2025 revenue of S$84,000 from 23 clients, with about 60% of working hours (no absolute hours given) spent on manual data entry and three clients asking about AI use (medium confidence for what the notes say; low for generalising, as the file is headed 'fictional example'). (my-business-notes.md)
+- **Tools and pricing**: Dext's entry plan is reported at $31.50/mo ($25.21 annual) for 250 documents and 5 users, with no single-user tier (affiliate-style review, unverified; conflicts with a $24/mo figure elsewhere). (https://bookkeepdiy.com/best/receipt-capture-tools)
+- **Tools and pricing**: Botkeeper, Docyt and Vic.ai are custom-priced or charge per-entity overages, so they are not priced for a one-person practice (blog comparison, UNVERIFIED pricing). (https://beancount.io/blog/2026/08/16/ai-bookkeeping-software-compared-automated-categorization-receipt-reconciliation-cost-guide)
+- **Accuracy**: An independent mixed-transaction test found 88-96% categorisation accuracy across three AI tools, below vendor claims of 99%+ (review-site test, not peer-reviewed; low to medium confidence). (https://billed.app/hub/accounting/ai-bookkeeping-software-2026/)
+- **Accuracy**: Digits reports 97.8% correct categorisation against 79.1% for outsourced human accountants in a June 2026 benchmark (VENDOR-SOURCED, reported by news site, UNVERIFIED). (https://startupfortune.com/ai-models-beat-human-accountants-on-bookkeeping-accuracy-in-new-benchmark/)
+- **Accuracy**: In the APEX-Accounting benchmark, the best model completed a full month-end close correctly in all 8 attempts only 2.6% of the time (secondary reporting of a Mercor/Ramp benchmark, vendor-affiliated). (https://inferencewire.com/insights/ai-still-struggles-to-reliably-close-the-books-test-finds)
+- **Accuracy**: GPT-4 scored 48.89% on US VITA tax certification questions, weakest on numerical calculation (peer-reviewed study, but a tax exam on an older model, not bookkeeping). (https://link.springer.com/article/10.1007/s10506-025-09465-7)
+- **Accuracy**: Reasoning failures made up 59-79% of annotated failures for the top three models in accounting agent benchmarks (arXiv preprint, not peer-reviewed). (https://arxiv.org/html/2607.27189)
+- **Professional and regulatory**: Australia's TPB(GS) 55/2026, reported as issued 22 July 2026, says registered tax agents remain responsible for AI output (secondary blog, UNVERIFIED against the TPB document). (https://www.avatarstudios.com.au/ai-for-accountants-australia/)
+- **Professional and regulatory**: UK professional bodies (ICAEW, ACCA, AAT, ICAS, CIOT) issued January 2026 guidance applying ethics principles to AI, with ICAEW advising disclosure of AI use and tool validation (secondary summary; primary documents not reviewed). (https://accountin.co.uk/ai-in-accounting/professional-body-guidance-on-ai/)
+- **Professional and regulatory**: AICPA Engage 25 (27 February 2025) discussed due diligence, conflicts and taxpayer data when using generative AI (conference summary, not a standard; low confidence). (https://www.aicpa-cima.com/professional-insights/article/gen-ai-reshaping-tax-and-financial-planning-at-engage-25)
+- **Data privacy**: Business and enterprise AI tiers from major vendors are reported not to train on inputs by default, while consumer tiers train unless opted out (secondary resource, UNVERIFIED against vendor documentation). (https://ausgpt.com.au/resources/does-ai-train-on-your-data)
+- **Data privacy**: Consumer ChatGPT, Claude and Gemini train on chats unless opted out, and opting out does not erase data already used (blog post, not checked against vendor policies). (https://theaicareerlab.com/blog/does-ai-train-on-your-data)
+- **Data privacy**: The Fireworks AI breach, disclosed November 2026, exposed customer billing data, secrets and datasets, with possible Notion AI exposure (news report, vendor-side incident, scope as reported). (https://thehackernews.com/2026/11/fireworks-ai-breach-widens-to-expose.html)
+- **Data privacy**: The Vercel breach of 19 April 2026 came via an infostealer at AI vendor Context.ai and exposed limited customer credentials (research note, publication date unknown; low to medium confidence). (https://labs.cloudsecurityalliance.org/research/csa-research-note-ai-saas-supply-chain-vercel-contextai-2026/)
+- **Business case**: A reported MIT/Stanford study of 79 firms with 5-50 employees found a 7.5-day shorter monthly close and about 55% more clients per accountant per week (SECONDARY blog summary; primary paper unconfirmed; firms, not solo practices). (https://crossing.one/blog/ai-accounting-firm-monthly-close-mit-stanford-study-2026)
+- **Business case**: A survey of 486 North American accounting and bookkeeping professionals found 95% use AI but about 1 in 5 see measurable ROI (magazine-reported survey, date unknown, firm sample). (https://magazine.financial-cents.com/articles/ai-adoption-accounting-firms/)
+- **Business case**: A BILL survey of 200+ firm leaders found 68% are ruling out or undecided on new pricing, and 82% say AI has raised client expectations (VENDOR survey, firm-level sample, low confidence). (https://www.bill.com/blog/ai-ambition-survey-vol-4-findings)
+
+## Gaps
+- Conflict: Dext pricing is $31.50/mo versus $24/mo across sources; official pricing was not retrieved, and a $35-50 per-user figure has no URL.
+- Conflict: Digits' 97.8% (vendor) and the independent 88-96% measure different tasks, and APEX's 2.6% full-close result measures another; high per-transaction accuracy does not imply a reliable close.
+- Conflict: MIT/Stanford gains, the Xero hours figure and the GPT-4 VITA score do not transfer to a solo bookkeeper; the 95% adoption versus 1-in-5 ROI gap is a contrast, not a contradiction.
+- Gap: No Singapore PDPA or other regulatory research, no GDPR/CCPA, and no primary IFAC, AICPA, IRS or ICAEW standard texts were reviewed.
+- Gap: No independent bookkeeping categorisation benchmark, solo ROI or per-task time data, verification workflow guidance, or bookkeeping-specific hallucination evidence was found.
+- Gap: Xero and QuickBooks AI features are known only through reviews; Vic.ai pricing and accuracy are unsourced; most source dates are unknown.
+- Gap: Your notes lack services beyond data entry, transaction volume, software stack, pricing model, budget, data sensitivity and risk tolerance; confirm the figures are yours, as the file is headed 'fictional example' with no page number.
+- Gap: Training-default claims rest on two secondary sources not checked against vendor terms, and the Canada, EU, India and New Zealand regimes were not covered.
+- Unsourced claim removed: Xero Early at $27/mo or QuickBooks Simple Start at $38/mo is reported to suit under 20 invoices a month with built-in AI (blog, date unknown; low to medium confidence).
+
+Coverage: searched AI tools for bookkeeping and accounting firms (solo-practitioner focus): categorisation, receipt/invoice extraction, bank reconciliation, month-end close; Accuracy and error risk of AI in bookkeeping and accounting work; Business case of AI adoption for solo and small bookkeeping/accounting practices (time savings, pricing, client expectations, competition, adoption and ROI surveys); Data privacy and security risks of using AI tools with client financial data (solo bookkeeper); Professional and regulatory guidance on bookkeepers and accountants using AI tools (2024-2025). Found nothing for: none
+
+=== Coordinator ===
+The research supports a limited, supervised pilot of AI for data capture and categorisation rather than full adoption, because the accuracy evidence is mostly vendor-sourced and no solo-practitioner or Singapore-specific data was found. Before committing, check Singapore PDPA duties and vendor data terms, confirm the figures in your notes (they are headed "fictional example"), and test single-user pricing and accuracy on your own anonymised client data.
+
+# Step 7 · The live tests, on the fixed sample data
+$ uv run test_research.py
+Scenario 1 · the narrow first plan (RULE_1_NARROW) on the sample data
+
 
 Coordinator turn 1: stop_reason=tool_use, 4 delegation(s)
-  -> search: 'Research topic: Impact of AI on creative industries. Your subtask: AI in digital art creat' (2 tool calls)
-       search_web({"query": "generative AI digital art creation survey artists 2025"}) ok
-       search_web({"query": "AI image generators artists income copyright lawsuits digital art 2024"}) ok
-  -> search: 'Research topic: Impact of AI on creative industries. Your subtask: AI in graphic design. F' (2 tool calls)
-       search_web({"query": "AI in graphic design survey 2024 2025 agencies freelance designers"}) ok
-       search_web({"query": "generative AI graphic design productivity study"}) ok
-  -> search: 'Research topic: Impact of AI on creative industries. Your subtask: AI in photography. Find' (2 tool calls)
-       search_web({"query": "AI in photography survey professional photographers 2025"}) ok
-       search_web({"query": "generative AI stock photo market photographers income"}) ok
-  -> documents: 'Read these two internal PDFs in full: (1) Halden-Rao-2026-Journal-of-Creative-Economies.pd' (2 tool calls)
+  -> search: 'Research topic: Impact of AI on creative industries. Your subtask: AI in digital art creat' (3 tool calls)
+       search_web({"query": "AI digital art creation adoption artists income 2024 2025"}) ok
+       search_web({"query": "AI art copyright lawsuit licensing digital artists 2025"}) ok
+       search_web({"query": "AI digital art creation adoption artists income 2024 2025"}) ok
+  -> search: 'Research topic: Impact of AI on creative industries. Your subtask: AI in graphic design. S' (4 tool calls)
+       search_web({"query": "AI in graphic design adoption agencies in-house teams productivity"}) ok
+       search_web({"query": "graphic designer freelance demand job postings generative AI pricing 2025"}) ok
+       search_web({"query": "AI in graphic design adoption agencies in-house teams productivity"}) ok
+       search_web({"query": "graphic designer freelance demand job postings generative AI pricing 2025"}) ok
+  -> search: 'Research topic: Impact of AI on creative industries. Your subtask: AI in photography. Sear' (4 tool calls)
+       search_web({"query": "AI in photography professional photographers income demand 2025"}) ok
+       search_web({"query": "AI photography authenticity disclosure contests generative images"}) ok
+       search_web({"query": "AI in photography professional photographers income demand 2025"}) ok
+       search_web({"query": "AI photography authenticity disclosure contests generative images"}) ok
+  -> documents: 'Read the following two documents in full: Halden-Rao-2026-Journal-of-Creative-Economies.pd' (2 tool calls)
        read_document({"name": "Halden-Rao-2026-Journal-of-Creative-Economies.pdf"}) ok
        read_document({"name": "BrightCanvas-Customer-Benchmark-2026.pdf"}) ok
   (4 subagent(s) in 8s)
 
 Coordinator turn 2: stop_reason=tool_use, 1 delegation(s)
-  -> synthesis: 'Combine the following subagent findings on the research topic "Impact of AI on creative in' (0 tool calls)
-  (1 subagent(s) in 13s)
-
-Coordinator turn 3: stop_reason=tool_use, 1 delegation(s)
-  -> report: 'Write the final cited report on "Impact of AI on creative industries" using ONLY the synth' (0 tool calls)
-  (1 subagent(s) in 12s)
-
-Coordinator turn 4: stop_reason=end_turn, 0 delegation(s)
-
-=== Report (report.md) ===
-# Impact of AI on Creative Industries: Sourced Findings and Gaps
-
-Sourced evidence is thin: four figures from two external polls, one peer-reviewed study, and one vendor benchmark. The figures measure different outcomes and populations, so they are not directly comparable. Photography has no sourced findings, and no copyright, licensing, or income evidence was found. The BrightCanvas figure comes from a vendor's self-selected sample, and page numbers are unverified.
-
-- **digital_art**: In a membership-based flash poll (survey, not peer-reviewed, self-selected sample, size and method not stated), 37% of member illustrators lost at least one commission to AI image tools in 2025. (https://example.org/illustrators-circle-flash-poll)
-- **graphic_design**: In a survey-type industry report (type unconfirmed, sample size and methodology not stated), 71% of graphic design studios use AI image generation for concept work. (https://example.org/design-studio-pulse-2026)
-- **cross_cutting**: In a peer-reviewed journal study (stratified random sample of 3,100 firms in 12 countries), 41% of creative small firms adopted generative AI in 2025, up from 23% in 2023. (Halden-Rao-2026-Journal-of-Creative-Economies.pdf, p.112)
-- **cross_cutting**: In a vendor benchmark (opt-in poll of 640 BrightCanvas customers, self-selected and not representative), 78% of creative studios use generative AI every week. (BrightCanvas-Customer-Benchmark-2026.pdf, p.3)
-
-## Gaps
-- [photography] No sourced findings; search returned only adjacent visual-arts results.
-- [all sectors] No copyright, licensing, lawsuit, or income evidence found.
-- [cross_cutting] BrightCanvas 78% is a vendor, self-selected opt-in sample of customers, not representative.
-- [cross_cutting] Page numbers (p.112, p.3) were reported by the tool and are unverified; PDF text was a single short paragraph.
-- [conflict] 41%, 78%, 71%, and 37% measure different outcomes and populations and should not be compared directly.
-- [digital_art, graphic_design] Sample sizes and methods are unverifiable for the illustrator poll and Design Studio Pulse; the 37% covers illustrators, not digital artists generally.
-- [graphic_design] No controlled productivity, freelance pricing, or skill-requirement evidence found.
-- [cross_cutting] Searches were limited and returned largely the same two off-sector results.
-
-Coverage: searched visual_arts; never searched: film, music, writing
-
-=== Coordinator ===
-The report is complete but thin: it rests on four figures from two external polls, one peer-reviewed study (Halden-Rao 2026), and one vendor benchmark (BrightCanvas 2026). Photography produced no sourced findings, and no copyright, licensing, or income evidence turned up, so those gaps remain open.
-
-# Step 7 · Scenario 2: the same topic, with the fix to rule 1
-$ uv run research.py "Impact of AI on creative industries"
-Coordinator rule 1: 1. Decompose the topic into the distinct sectors it spans before you split it. For creative industries, cover at
-   least music, writing, film and visual arts: one search subtask per sector. Breadth first: a narrow plan makes a narrow report.
-
-Coordinator turn 1: stop_reason=tool_use, 6 delegation(s)
-  -> search: 'Research topic: Impact of AI on creative industries. Your sector: MUSIC (recording, compos' (2 tool calls)
-       search_web({"query": "AI music industry report 2025 streaming royalties AI-generated tracks"}) ok
-       search_web({"query": "AI music lawsuits voice cloning copyright labels 2025"}) ok
-  -> search: 'Research topic: Impact of AI on creative industries. Your sector: WRITING (books and publi' (2 tool calls)
-       search_web({"query": "AI impact on writing publishing journalism translation survey 2025"}) ok
-       search_web({"query": "AI training data lawsuits authors publishers licensing deals 2025"}) ok
-  -> search: 'Research topic: Impact of AI on creative industries. Your sector: FILM AND TELEVISION (scr' (2 tool calls)
-       search_web({"query": "AI impact film and television industry 2025 WGA SAG-AFTRA"}) ERROR timeout
-       search_web({"query": "generative AI film production VFX dubbing localization survey 2025"}) ERROR timeout
-  -> search: 'Research topic: Impact of AI on creative industries. Your sector: VISUAL ARTS AND ILLUSTRA' (2 tool calls)
-       search_web({"query": "AI impact on visual artists illustration survey income 2025"}) ok
-       search_web({"query": "Andersen v. Stability AI Getty Images lawsuit update"}) ok
-  -> search: 'Research topic: Impact of AI on creative industries. Your sector: GAMES, ADVERTISING AND D' (2 tool calls)
-       search_web({"query": "generative AI video game development survey 2025"}) ok
-       search_web({"query": "generative AI advertising agency creative production jobs cost 2025"}) ok
-  -> documents: 'Research topic: Impact of AI on creative industries. Read both internal documents in full:' (2 tool calls)
-       read_document({"name": "Halden-Rao-2026-Journal-of-Creative-Economies.pdf"}) ok
-       read_document({"name": "BrightCanvas-Customer-Benchmark-2026.pdf"}) ok
-  (6 subagent(s) in 7s)
-
-Coordinator turn 2: stop_reason=tool_use, 1 delegation(s)
-  -> synthesis: 'Research topic: Impact of AI on creative industries. Combine the subagent findings below i' (0 tool calls)
+  -> synthesis: 'Combine the following subagent findings on the topic "Impact of AI on creative industries"' (0 tool calls)
   (1 subagent(s) in 14s)
 
 Coordinator turn 3: stop_reason=tool_use, 1 delegation(s)
-  -> report: 'Write the final cited report on: Impact of AI on creative industries. Use the synthesis JS' (0 tool calls)
-  (1 subagent(s) in 13s)
-
-Coordinator turn 4: stop_reason=end_turn, 0 delegation(s)
-
-=== Report (report.md) ===
-# Impact of AI on Creative Industries: Evidence Synthesis
-
-Evidence on AI in creative industries is thin and mostly self-reported or vendor-sourced. Adoption is the best-documented theme, with figures from 37% to 78% across music, writing, film, visual arts and design, but these measure different things and populations and are not directly comparable. Measured economic harm, legal outcomes and film/TV labor evidence are not established by this research. Games, advertising and design returned no usable evidence.
-
-- **music**: In an unverified survey dated 2026-03-19 (publisher unnamed, method and sample size not stated), 62% of surveyed independent labels reported using generative AI tools in music production during 2025. (https://example.org/northbridge-label-survey-2026)
-- **music**: In a self-selected member poll dated 2025-09-02 (not representative of musicians generally), 48% of member musicians reported using AI tools for composition or mixing at least once a month. (https://example.org/session-players-guild-poll)
-- **writing**: In a self-reported income study dated 2026-01-14 (sample size not visible; AI attribution respondent-reported), median freelance copywriting income fell 11% year over year, and 6 in 10 respondents blamed AI drafting tools. (https://example.org/freelance-writers-collective-income)
-- **writing**: In a small-sample tracker dated 2026-04-02 (25 publishers, low for generalization), 19 of 25 surveyed book publishers require authors to disclose AI assistance. (https://example.org/lanternhouse-ai-policy-tracker)
-- **film/TV**: In a partial excerpt dated 2026-06-08 (publisher and methodology unverified), 44% of independent film productions reported using AI for visual-effects cleanup in 2025. (https://example.org/indie-screen-council-vfx)
-- **visual arts**: In an excerpt dated 2026-05-12 from a self-selected membership flash poll, 37% of member illustrators reported losing at least one commission to AI image tools in 2025; this measures reported losses, not adoption. (https://example.org/illustrators-circle-flash-poll)
-- **visual arts**: In a survey-based excerpt dated 2026-02-20 (sample unchecked), 71% of graphic design studios reported using AI image generation for concept work. (https://example.org/design-studio-pulse-2026)
-- **cross-sector**: In a peer-reviewed study dated 2026-03-15 (stratified random sample of 3,100 firms in 12 countries; extract states no limitations), generative AI adoption among creative small firms was 41% in 2025, up from 23% in 2023. (Halden-Rao-2026-Journal-of-Creative-Economies.pdf, p.112)
-- **cross-sector**: In a vendor benchmark dated 2026-06-01 by an AI image tool seller (opt-in poll of 640 of its own customers; vendor interest not disclosed), 78% of creative studios reported using generative AI every week. (BrightCanvas-Customer-Benchmark-2026.pdf, p.3)
-
-## Gaps
-- Games, advertising and design: both searches returned empty; no usable evidence exists in this research.
-- Legal and policy landscape: not established by this research (training-data lawsuits, licensing, legislation unresearched).
-- Film/TV labor (WGA/SAG-AFTRA terms, likeness rights, displacement): not established; searches timed out twice.
-- Music, writing, visual arts: royalties, lawsuits, displacement and income beyond small polls are largely unresearched; no measured economic impact at scale.
-- Conflict: 41% (any adoption, peer-reviewed, n=3,100) and 78% (weekly use, vendor opt-in, n=640) measure different things and populations; do not compare directly.
-- Conflict: 62% label production use vs 48% musician monthly composition/mixing, and 71% design concept work vs 78% weekly studio use, differ in unit, frequency, task and population.
-- Conflict: 37% illustrator commission losses measure reported losses, not adoption; the 11% income decline is self-reported and AI-attributed, with no link to measured earnings.
-- Sources: example.org URLs name no publisher; Halden-Rao title and authors are absent from the extract; PDF scope beyond adoption is unclear. Treat as unverified.
-
-Coverage: searched film, music, visual_arts, writing; never searched: none
-
-=== Coordinator ===
-Adoption of generative AI across creative industries is the best-documented finding, with figures ranging from 37% to 78% depending on sector and measure. Measured economic harm, legal outcomes, and film/TV labor effects remain largely unestablished, and games, advertising, and design returned no usable evidence.
-
-$ uv run test_research.py
-Scenario 1 · BEFORE the fix: the coordinator's first plan
-
-
-Coordinator turn 1: stop_reason=tool_use, 4 delegation(s)
-  -> search: 'Research subtask: AI in digital art creation, as part of the broader topic "Impact of AI o' (2 tool calls)
-       search_web({"query": "generative AI digital art creation artists survey adoption 2024 2025"}) ok
-       search_web({"query": "AI art copyright training data artists income market pricing report"}) ok
-  -> search: 'Research subtask: AI in graphic design, as part of the broader topic "Impact of AI on crea' (2 tool calls)
-       search_web({"query": "AI in graphic design survey adoption agencies in-house teams 2024 2025"}) ok
-       search_web({"query": "generative AI graphic designer jobs freelance demand report"}) ok
-  -> search: 'Research subtask: AI in photography, as part of the broader topic "Impact of AI on creativ' (2 tool calls)
-       search_web({"query": "AI in photography industry survey photographers income 2025"}) ok
-       search_web({"query": "AI generated images stock photography market authenticity disclosure"}) ok
-  -> documents: 'Read both internal PDFs in full: (1) Halden-Rao-2026-Journal-of-Creative-Economies.pdf and' (2 tool calls)
-       read_document({"name": "Halden-Rao-2026-Journal-of-Creative-Economies.pdf"}) ok
-       read_document({"name": "BrightCanvas-Customer-Benchmark-2026.pdf"}) ok
-  (4 subagent(s) in 10s)
-
-Coordinator turn 2: stop_reason=tool_use, 1 delegation(s)
-  -> synthesis: 'Combine the following subagent findings into one JSON object for a report on "Impact of AI' (0 tool calls)
-  (1 subagent(s) in 18s)
-
-Coordinator turn 3: stop_reason=tool_use, 1 delegation(s)
   -> report: 'Write the final cited report on "Impact of AI on creative industries" using ONLY the synth' (0 tool calls)
-  (1 subagent(s) in 11s)
+  (1 subagent(s) in 10s)
 
 Coordinator turn 4: stop_reason=end_turn, 0 delegation(s)
 
---- checks, Scenario 1 (before the fix) ---
+--- checks, Scenario 1 (the narrow plan) ---
 PASS  every subagent completed: each returned its JSON and no tool call failed
 PASS  yet the coverage check flags music, writing and film as never searched
 
-Scenario 2 · AFTER the fix: rule 1 of the coordinator's system prompt covers every sector
+Scenario 2 · the team's rule 1 on the same sample data
 
 
-Coordinator turn 1: stop_reason=tool_use, 5 delegation(s)
-  -> search: 'Research topic: Impact of AI on creative industries. Your sector: MUSIC. Find current evid' (2 tool calls)
-       search_web({"query": "generative AI music industry survey musicians income 2025"}) ok
-       search_web({"query": "AI music streaming platforms copyright licensing deals voice cloning 2025"}) ok
-  -> search: 'Research topic: Impact of AI on creative industries. Your sector: WRITING (books, journali' (2 tool calls)
-       search_web({"query": "generative AI impact on writers authors journalists translators survey 2024 2025"}) ok
-       search_web({"query": "AI copyright lawsuit authors publishers training data"}) ok
-  -> search: 'Research topic: Impact of AI on creative industries. Your sector: FILM AND TELEVISION (inc' (2 tool calls)
-       search_web({"query": "generative AI film and television production VFX animation survey 2025"}) ERROR timeout
-       search_web({"query": "film television AI actor likeness union contract guild negotiations 2024 2025"}) ERROR timeout
-  -> search: 'Research topic: Impact of AI on creative industries. Your sector: VISUAL ARTS AND DESIGN (' (2 tool calls)
-       search_web({"query": "generative AI impact on visual artists illustrators designers income jobs survey 2024 2025"}) ok
-       search_web({"query": "AI image generators copyright lawsuit artists training data Getty Stability Midjourney"}) ok
-  -> documents: 'Research topic: Impact of AI on creative industries. Read the two internal PDFs named exac' (2 tool calls)
+Coordinator turn 1: stop_reason=tool_use, 7 delegation(s)
+  -> search: 'Research area: MUSIC. Topic: impact of AI on the music industry (recording, composition, p' (2 tool calls)
+       search_web({"query": "AI-generated music streaming platforms fraud detection policy"}) ok
+       search_web({"query": "AI music licensing deals labels voice cloning musicians income"}) ok
+  -> search: 'Research area: WRITING AND PUBLISHING (books, journalism, copywriting, translation, screen' (2 tool calls)
+       search_web({"query": "AI writing and publishing impact on authors"}) ok
+       search_web({"query": "AI publishing licensing deals, author lawsuits, translation, journalism, freelance writing"}) ok
+  -> search: 'Research area: FILM, TELEVISION, ANIMATION AND VFX. Topic: impact of AI on screen producti' (2 tool calls)
+       search_web({"query": "AI generative video in film and TV production VFX pre-visualization dubbing de-aging"}) ERROR timeout
+       search_web({"query": "WGA SAG-AFTRA 2023 strike AI provisions animation VFX entry-level jobs"}) ERROR timeout
+  -> search: 'Research area: VISUAL ARTS, ILLUSTRATION, GRAPHIC AND COMMERCIAL DESIGN, STOCK IMAGERY AND' (2 tool calls)
+       search_web({"query": "AI image generators illustrators designers stock photography demand"}) ok
+       search_web({"query": "generative AI visual artists survey income Getty Stability copyright"}) ok
+  -> search: 'Research area: VIDEO GAMES AND INTERACTIVE MEDIA. Topic: impact of AI on game development ' (2 tool calls)
+       search_web({"query": "generative AI game development survey developers adoption layoffs"}) ok
+       search_web({"query": "video game AI backlash Steam disclosure SAG-AFTRA AI voice agreement"}) ok
+  -> search: 'Research area: CROSS-CUTTING ECONOMICS, LABOR, COPYRIGHT AND POLICY across all creative in' (2 tool calls)
+       search_web({"query": "AI impact on creative industries employment earnings economic study"}) ok
+       search_web({"query": "AI training data copyright ruling legislation Bartz Anthropic Kadrey Meta"}) ok
+  -> documents: "Read the two documents named here and extract every finding relevant to AI's impact on cre" (2 tool calls)
        read_document({"name": "Halden-Rao-2026-Journal-of-Creative-Economies.pdf"}) ok
        read_document({"name": "BrightCanvas-Customer-Benchmark-2026.pdf"}) ok
-  (5 subagent(s) in 7s)
+  (7 subagent(s) in 6s)
 
 Coordinator turn 2: stop_reason=tool_use, 1 delegation(s)
-  -> synthesis: 'Research topic: Impact of AI on creative industries. Combine the findings below into one s' (0 tool calls)
-  (1 subagent(s) in 12s)
+  -> synthesis: 'Combine the findings below into one synthesis on "Impact of AI on creative industries". Ke' (0 tool calls)
+  (1 subagent(s) in 18s)
 
 Coordinator turn 3: stop_reason=tool_use, 1 delegation(s)
-  -> report: 'Write the final cited report on: Impact of AI on creative industries. Use ONLY the synthes' (0 tool calls)
+  -> report: 'Write the final cited report on "Impact of AI on creative industries" from the synthesis J' (0 tool calls)
   (1 subagent(s) in 13s)
 
 Coordinator turn 4: stop_reason=end_turn, 0 delegation(s)
 
---- checks, Scenario 2 (after the fix) ---
+--- checks, Scenario 2 (rule 1) ---
 PASS  a search ran for every sector: music, writing, film, visual arts
 PASS  two or more searches ran in parallel (same coordinator turn)
 PASS  every subagent used only its own tools
